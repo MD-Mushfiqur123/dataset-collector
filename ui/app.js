@@ -731,7 +731,7 @@ async function submitRecord() {
 async function pushRecordToGitHub(record) {
     const cfg = getGhConfig();
     const user = cfg.username || "MD-Mushfiqur123";
-    const repo = (cfg.repo || "dataset").toLowerCase() === "dataset" ? "dataset" : cfg.repo;
+    const repo = cfg.repo || "scientific-reasoning-dataset";
 
     try {
         const dateStr = new Date().toISOString().replace(/[:\-]|\.\d{3}/g, "").slice(0, 15);
@@ -815,7 +815,7 @@ async function forcePush() {
     // Client GitHub Push via REST API
     const cfg = getGhConfig();
     const user = cfg.username || "MD-Mushfiqur123";
-    const repo = (cfg.repo || "dataset").toLowerCase() === "dataset" ? "dataset" : cfg.repo;
+    const repo = cfg.repo || "scientific-reasoning-dataset";
 
     if (!cfg.token) {
         showToast("🚀 Zero-Token Ingestion: Opening automated GitHub submission...");
@@ -861,12 +861,12 @@ async function forcePush() {
     }
 }
 
-// 1-Click Community Issue Submission directly to MD-Mushfiqur123/dataset
+// 1-Click Community Issue Submission directly to scientific-reasoning-dataset
 function submitViaGitHubIssue(buffer) {
     if (!buffer || buffer.length === 0) return;
     const cfg = getGhConfig();
     const user = cfg.username || "MD-Mushfiqur123";
-    const repo = (cfg.repo || "dataset").toLowerCase() === "dataset" ? "dataset" : cfg.repo;
+    const repo = cfg.repo || "scientific-reasoning-dataset";
 
     const title = encodeURIComponent(`[Dataset Submission] ${currentDomain.toUpperCase()} (${buffer.length} records)`);
     const bodyContent = `### 🧬 Community Dataset Submission (${currentDomain.toUpperCase()})
@@ -880,8 +880,20 @@ ${JSON.stringify(buffer, null, 2)}
 
 *(🤖 Note: This submission will be automatically verified by Mushfiqur's GitHub Actions Bot. Valid unique records [<83% similarity] will be auto-merged into official shards in ${user}/${repo} and this issue will be closed automatically.)*`;
 
-    const issueUrl = `https://github.com/${user}/${repo}/issues/new?title=${title}&body=${encodeURIComponent(bodyContent)}&labels=dataset-submission,bengali-reasoning`;
-    window.open(issueUrl, "_blank");
+    // GitHub Fastly/Nginx rejects URLs > ~2KB with ERR_CONNECTION_CLOSED.
+    // Safe Production Spec: Automatically copy payload to clipboard and open clean issue URL!
+    try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(bodyContent);
+        }
+    } catch (e) {
+        console.log("Clipboard write fallback");
+    }
+
+    showToast("📋 ডেটা ক্লিপবোর্ডে কপি হয়েছে! নতুন পেইজে শুধু Ctrl+V চেপে Submit করুন।");
+
+    const cleanIssueUrl = `https://github.com/${user}/${repo}/issues/new?title=${title}&labels=dataset-submission,bengali-reasoning`;
+    window.open(cleanIssueUrl, "_blank");
 }
 
 function clearForm() {
