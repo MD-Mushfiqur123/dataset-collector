@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DATASET FORGE // SWISS MINIMAL</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=1792116">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Top Master Bar -->
+        <header class="swiss-header">
+            <div class="brand-cluster">
+                <div class="swiss-cross">+</div>
+                <div>
+                    <h1 class="brand-title">MUSHFIQUR DATASET FORGE</h1>
+                    <span class="brand-subtitle">DISTRIBUTED SCIENTIFIC COLLECTIVE // DATAS.PAINT SPEC</span>
+                </div>
+            </div>
+
+            <div class="telemetry-cluster">
+                <div class="telemetry-pill">
+                    <span class="pill-label">REPO:</span>
+                    <a id="targetRepoLink" href="#" target="_blank" class="pill-value">github.com/<span id="ghUser">MD-Mushfiqur123</span>/Dataset</a>
+                </div>
+
+                <div class="telemetry-pill">
+                    <span class="pill-label">BUFFER:</span>
+                    <span id="bufferDisplay" class="pill-value">0.0 MB / 1024 MB (0%)</span>
+                </div>
+
+                <div class="telemetry-pill">
+                    <span class="pill-label">STATUS:</span>
+                    <span id="pushStatusPill" class="pill-value">UNPUSHED: 0 / 5</span>
+                </div>
+
+                <button id="btnOpenGhModal" class="swiss-btn-outline" title="Connect your own GitHub account & repository">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                    CONNECT GITHUB
+                </button>
+
+                <button id="btnForcePush" class="swiss-btn-compact" title="Flush buffer directly to GitHub">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                    PUSH NOW
+                </button>
+            </div>
+        </header>
+
+        <!-- Domain Selection Strip (4 Domains: Pure Minimal Tabs) -->
+        <section class="domain-strip">
+            <button class="domain-tab active" data-domain="physics">
+                <svg class="domain-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2"></circle><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path><path d="M2 12a15.3 15.3 0 0 1 10-4 15.3 15.3 0 0 1 10 4 15.3 15.3 0 0 1-10 4 15.3 15.3 0 0 1-10-4z"></path></svg>
+                <div class="domain-text">
+                    <span class="dom-en">PHYSICS</span>
+                    <span class="dom-bn">পদার্থবিজ্ঞান</span>
+                </div>
+            </button>
+
+            <button class="domain-tab" data-domain="chemistry">
+                <svg class="domain-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2v7.31L4.65 19.3A2 2 0 0 0 6.4 22h11.2a2 2 0 0 0 1.75-2.7L14 9.31V2"></path><line x1="8.5" y1="2" x2="15.5" y2="2"></line><line x1="7" y1="14" x2="17" y2="14"></line></svg>
+                <div class="domain-text">
+                    <span class="dom-en">CHEMISTRY</span>
+                    <span class="dom-bn">রসায়ন</span>
+                </div>
+            </button>
+
+            <button class="domain-tab" data-domain="mathematics">
+                <svg class="domain-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 4H6l7 8-7 8h12"></path></svg>
+                <div class="domain-text">
+                    <span class="dom-en">MATHEMATICS</span>
+                    <span class="dom-bn">উচ্চতর গণিত</span>
+                </div>
+            </button>
+
+            <button class="domain-tab" data-domain="biology">
+                <svg class="domain-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 15c6.667-6 13.333 0 20-6"></path><path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"></path><path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993"></path><path d="M17 17a5 5 0 0 0-5-5"></path><path d="M7 7a5 5 0 0 0 5 5"></path></svg>
+                <div class="domain-text">
+                    <span class="dom-en">BIOLOGY</span>
+                    <span class="dom-bn">জীববিজ্ঞান</span>
+                </div>
+            </button>
+        </section>
+
+        <!-- Main Workspace (Single Column Minimalist Grid) -->
+        <main class="main-workspace">
+            <!-- Left: 1 Master Meta-Prompt Card -->
+            <div class="swiss-panel prompt-panel">
+                <div class="panel-header">
+                    <div class="panel-title-cluster">
+                        <span class="badge-tag">EXACTLY 1 MASTER PROMPT</span>
+                        <h2 id="activeDomainHeading">PHYSICS // MASTER PROMPT</h2>
+                    </div>
+                    <button id="btnCopyPrompt" class="swiss-btn-action">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        <span id="copyBtnText">COPY</span>
+                    </button>
+                </div>
+                <div class="prompt-body">
+                    <pre id="masterPromptBox" class="prompt-text-content"></pre>
+                </div>
+                <div class="panel-footer">
+                    <span class="hint-text">প্রম্পটটি কপি করে DeepSeek বা ChatGPT-তে পেস্ট করে রিজনিং প্রস্তুত করুন।</span>
+                </div>
+            </div>
+
+            <!-- Ingestion Form & Workspace -->
+            <div class="swiss-panel input-panel">
+                <div class="panel-header">
+                    <div class="mode-toggles">
+                        <button class="mode-btn active" data-mode="smart">
+                            ⚡ 1-PASTE AUTO-SPLIT (অ্যালগরিদম নিজেই ভাগ করবে)
+                        </button>
+                        <button class="mode-btn" data-mode="manual">
+                            📝 3-BOX MANUAL
+                        </button>
+                        <button class="mode-btn" data-mode="transcript">
+                            🎙️ TRANSCRIPT
+                        </button>
+                    </div>
+
+                    <!-- 83% Duplicate Radar Badge (Color Feedback) -->
+                    <div id="radarBadge" class="radar-badge pristine">
+                        <span class="radar-dot"></span>
+                        <span id="radarText">UNIQUENESS: 100% (PRISTINE)</span>
+                    </div>
+                </div>
+
+                <div class="input-form">
+                    <!-- Mode 1: 1-Paste Auto-Split (Default & Recommended) -->
+                    <div id="smartFieldsGroup">
+                        <div class="form-group">
+                            <div class="label-with-counter">
+                                <label class="form-label">
+                                    PASTE FULL AI OUTPUT (এখানে পুরো টেক্সট পেস্ট করুন):
+                                </label>
+                                <span class="auto-badge">⚡ ALGORITHM WILL AUTO-SPLIT &lt;think&gt; &amp; SOLUTION</span>
+                            </div>
+                            <textarea id="inputRawPaste" class="swiss-textarea h-md" placeholder="DeepSeek বা ChatGPT থেকে প্রাপ্ত সম্পূর্ণ আউটপুট (সমস্যা, <think> চিন্তন ও চূড়ান্ত উত্তর) সরাসরি এখানে একবারে পেস্ট করুন। অ্যালগরিদম স্বয়ংক্রিয়ভাবে আলাদা করে নেবে..."></textarea>
+                        </div>
+
+                        <!-- Real-time Decomposed Breakdown Preview (Interactive / Editable) -->
+                        <div id="autoSplitBreakdown" class="auto-split-breakdown">
+                            <div class="breakdown-header">
+                                <span class="breakdown-title">⚡ ALGORITHM AUTO-SPLIT BREAKDOWN (স্বয়ংক্রিয় পৃথকীকরণ)</span>
+                                <span id="splitStatusText" class="breakdown-status">Awaiting paste...</span>
+                            </div>
+                            
+                            <div class="split-cards-grid">
+                                <div class="split-card">
+                                    <div class="split-card-header">
+                                        <span class="card-tag tag-prompt">📌 DETECTED PROMPT (প্রশ্ন বা সমস্যা)</span>
+                                        <span id="splitPromptCount" class="card-count">0 words</span>
+                                    </div>
+                                    <textarea id="splitPrompt" class="swiss-textarea h-xs" placeholder="প্রশ্ন বা সমস্যা এখানে স্বয়ংক্রিয়ভাবে আসবে..."></textarea>
+                                </div>
+
+                                <div class="split-card">
+                                    <div class="split-card-header">
+                                        <span class="card-tag tag-think">🧠 &lt;think&gt; REASONING (অভ্যন্তরীণ চিন্তন প্রক্রিয়া)</span>
+                                        <span id="splitReasoningCount" class="card-count">0 words</span>
+                                    </div>
+                                    <textarea id="splitReasoning" class="swiss-textarea h-sm mono" placeholder="<think> ট্যাগের অভ্যন্তরীণ যুক্তি স্বয়ংক্রিয়ভাবে এখানে আলাদা হবে..."></textarea>
+                                </div>
+
+                                <div class="split-card">
+                                    <div class="split-card-header">
+                                        <span class="card-tag tag-response">🎯 FINAL SOLUTION (চূড়ান্ত সমাধান ও আউটপুট)</span>
+                                        <span id="splitResponseCount" class="card-count">0 words</span>
+                                    </div>
+                                    <textarea id="splitResponse" class="swiss-textarea h-sm" placeholder="চূড়ান্ত উত্তর ও প্রাতিষ্ঠানিক সমাধান স্বয়ংক্রিয়ভাবে এখানে আলাদা হবে..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mode 2: 3-Box Manual (Optional fallback) -->
+                    <div id="manualFieldsGroup" style="display: none;">
+                        <div class="form-group">
+                            <label class="form-label">PROBLEM / PROMPT (প্রশ্ন বা সমস্যা):</label>
+                            <textarea id="inputPrompt" class="swiss-textarea h-sm" placeholder="এখানে পদার্থবিজ্ঞান, রসায়ন, গণিত বা জীববিজ্ঞানের সমস্যাটি লিখুন..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label-with-counter">
+                                <label class="form-label">&lt;think&gt; INTERNAL REASONING (অভ্যন্তরীণ চিন্তন প্রক্রিয়া):</label>
+                                <span id="thinkWordCount" class="counter-text">0 words</span>
+                            </div>
+                            <textarea id="inputReasoning" class="swiss-textarea h-md mono" placeholder="<think> ট্যাগের ভেতরের সম্পূর্ণ বাংলা যুক্তি, ডেরিভেশন ও চিন্তা এখানে দিন..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="label-with-counter">
+                                <label class="form-label">FINAL SOLUTION / RESPONSE (চূড়ান্ত সমাধান ও আউটপুট):</label>
+                                <span id="responseWordCount" class="counter-text">0 words</span>
+                            </div>
+                            <textarea id="inputResponse" class="swiss-textarea h-md" placeholder="চূড়ান্ত প্রাতিষ্ঠানিক সমাধান ও নির্ভুল ফলাফল এখানে লিখুন..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Mode 3: Transcript Field -->
+                    <div id="transcriptGroup" class="form-group" style="display: none;">
+                        <div class="label-with-counter">
+                            <label class="form-label">INTERNET BANGLA TRANSCRIPT (ইউটিউব বা লেকচার ট্রান্সক্রিপ্ট):</label>
+                            <span id="transcriptWordCount" class="counter-text">0 words</span>
+                        </div>
+                        <textarea id="inputTranscript" class="swiss-textarea h-lg" placeholder="ইউটিউব ভিডিও বা বাংলা লেকচারের অডিও ট্রান্সক্রিপ্ট টেক্সট এখানে পেস্ট করুন..."></textarea>
+                    </div>
+
+                    <!-- Action Bar -->
+                    <div class="form-actions">
+                        <div class="metrics-summary">
+                            <span>TOTAL TOKENS: <strong id="tokenMetric">~0</strong></span>
+                            <span class="sep">/</span>
+                            <span>WORDS: <strong id="wordMetric">0</strong></span>
+                            <span class="sep">/</span>
+                            <span id="gatekeeperStatus">GATEKEEPER: <strong>PASS (&lt;83%)</strong></span>
+                        </div>
+
+                        <div class="btn-group">
+                            <button id="btnClear" class="swiss-btn-secondary">CLEAR</button>
+                            <button id="btnSubmit" class="swiss-btn-primary">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                SUBMIT RECORD
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Bottom Shard Telemetry Feed -->
+        <footer class="shards-footer">
+            <div class="footer-header">
+                <span class="footer-title">SHARD INVENTORY // BUFFER HEALTH</span>
+                <span id="diskFreedTotal" class="freed-text">DISK FREED VIA PRUNING: 0.0 MB</span>
+            </div>
+            <div id="shardsList" class="shards-grid">
+                <div class="shard-item empty">Local buffer pruned after successful GitHub push. Zero disk space wasted.</div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- GitHub Connection Modal (Swiss Minimal Monochrome) -->
+    <div id="ghModal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="modal-title-cluster">
+                    <span class="badge-tag">AUTHENTICATION & REPO ROUTING</span>
+                    <h3 class="modal-title">CONNECT GITHUB REPOSITORY</h3>
+                </div>
+                <button id="btnCloseGhModal" class="modal-close-btn">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <p class="modal-desc">
+                    যেকোনো ইউজার বা কন্ট্রিবিউটর তাদের নিজস্ব GitHub অ্যাকাউন্ট যুক্ত করতে পারবেন। 
+                    প্রতিটি ডিস্টিল্ড শার্ড স্বয়ংক্রিয়ভাবে আপনার <code>https://github.com/&lt;username&gt;/&lt;repo&gt;</code> তে পুশ হবে।
+                </p>
+
+                <!-- 1-Click Auto-Detect Button -->
+                <div class="autodetect-banner">
+                    <div class="autodetect-info">
+                        <strong>⚡ 1-CLICK INSTANT AUTH</strong>
+                        <span>লোকাল মেশিনের GitHub CLI থেকে ১ ক্লিকে অটো-ডিটেক্ট করুন:</span>
+                    </div>
+                    <button id="btnAutoDetectGh" class="swiss-btn-autodetect" type="button">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                        AUTO-DETECT FROM CLI
+                    </button>
+                </div>
+
+                <div class="modal-divider"><span>OR MANUAL REPO SETUP</span></div>
+
+                <div class="form-group">
+                    <label class="form-label" for="ghUsernameInput">GITHUB USERNAME (বা অর্গানাইজেশন):</label>
+                    <input type="text" id="ghUsernameInput" class="swiss-input" placeholder="e.g. MD-Mushfiqur123 or contributor-user" autocomplete="off" spellcheck="false">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="ghRepoInput">DATASET REPOSITORY NAME (রিপোজিটরি নাম):</label>
+                    <input type="text" id="ghRepoInput" class="swiss-input" placeholder="Dataset" value="Dataset" autocomplete="off" spellcheck="false">
+                    <span class="input-hint">Default is <code>Dataset</code>. If the repo doesn't exist on GitHub, create an empty repo first.</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="ghTokenInput">PERSONAL ACCESS TOKEN (PAT) [ঐচ্ছিক / OPTIONAL]:</label>
+                    <input type="password" id="ghTokenInput" class="swiss-input mono" placeholder="ghp_xxxxxxxxxxxx (Optional if 'gh auth login' is done)" autocomplete="off">
+                    <span class="input-hint">
+                        যদি মেশিনে <code>gh auth login</code> বা SSH কী সেটআপ থাকে, তবে টোকেন খালি রাখলেও চলবে। রিমোট বা ক্লাউড ইউজারের জন্য Personal Access Token (classic with <code>repo</code> scope) দিন।
+                    </span>
+                </div>
+
+                <div class="modal-info-box">
+                    <div class="info-row">
+                        <span class="info-label">TARGET PUSH URL:</span>
+                        <span id="modalTargetUrl" class="info-val">https://github.com/MD-Mushfiqur123/Dataset</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">LOCAL BUFFER:</span>
+                        <span class="info-val">5 Shards (1 GB) auto-commit & push with gzip compression</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button id="btnCancelGhModal" class="swiss-btn-secondary">CANCEL</button>
+                <button id="btnSaveGhConfig" class="swiss-btn-primary">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    SAVE & CONNECT
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="app.js?v=1792116"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Caches & Environment
+.pytest_cache/
+.coverage
+htmlcov/
+.env
+.env.*
+*.token
+*.key
+
+# Local Data Buffers & Staging
+data/buffer/
+data/shards/*.gz
+data/shards/*.jsonl
+projects/
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
