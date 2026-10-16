@@ -63,6 +63,68 @@
             </div>
         </header>
 
+        <!-- 📊 DUAL-STAGE ROLLING TELEMETRY (S1 UNCOMPRESSED & S2 COMPRESSED) -->
+        <section class="storage-telemetry-banner">
+            <!-- S1: Live Uncompressed Buffer -->
+            <div class="storage-card s1-card">
+                <div class="storage-card-header">
+                    <div class="storage-badge-group">
+                        <span class="storage-tag">S₁ BUFFER</span>
+                        <span class="storage-type-pill">UNCOMPRESSED</span>
+                    </div>
+                    <div class="storage-capacity" id="s1CapacityText">0.0 MB / 1 GB</div>
+                </div>
+                <div class="storage-progress-track">
+                    <div class="storage-progress-fill s1-fill" id="s1ProgressFill" style="width: 0%;"></div>
+                </div>
+                <div class="storage-card-footer">
+                    <span class="storage-status-note">⚡ ১ GB পূর্ণ হলে অটো-কম্প্রেস হয়ে র' ফাইল ডিলিট হবে</span>
+                    <div class="storage-footer-actions">
+                        <button id="btnCompressNow" class="storage-action-btn" title="ম্যানুয়ালি র' ফাইল সংকুচিত করে ডিস্ক ফাঁকা করুন">⚡ COMPRESS NOW</button>
+                        <span class="storage-percent" id="s1PercentText">0.0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- S2: Cumulative Compressed Shards Vault -->
+            <div class="storage-card s2-card">
+                <div class="storage-card-header">
+                    <div class="storage-badge-group">
+                        <span class="storage-tag">S₂ VAULT</span>
+                        <span class="storage-type-pill s2-pill">COMPRESSED (.jsonl.gz)</span>
+                    </div>
+                    <div class="storage-capacity" id="s2CapacityText">0.0 MB / 1 GB</div>
+                </div>
+                <div class="storage-progress-track">
+                    <div class="storage-progress-fill s2-fill" id="s2ProgressFill" style="width: 0%;"></div>
+                </div>
+                <div class="storage-card-footer">
+                    <span class="storage-status-note">📦 সংকুচিত শার্ড সঞ্চয় (~৪.৫ বিলিয়ন টোকেন ক্যাপাসিটি)</span>
+                    <div class="storage-footer-actions">
+                        <button id="btnDownloadZipQuick" class="storage-action-btn" title="বর্তমান সব সংকুচিত শার্ড জিপ আকারে নামিয়ে নিন">📦 DOWNLOAD ZIP</button>
+                        <span class="storage-percent" id="s2PercentText">0.0%</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 🎉 1 GB MILESTONE HIT BANNER (Full hoile zip download option asbe) -->
+        <div id="milestoneZipBanner" class="milestone-zip-banner" style="display: none;">
+            <div class="milestone-content">
+                <div class="milestone-badge">🎉 ১ GB COMPRESSED MILESTONE HIT!</div>
+                <div class="milestone-text">
+                    <strong>অভিনন্দন! আপনার S₂ ভল্ট পূর্ণ হয়েছে (~৪.৫ বিলিয়ন টোকেন সংগৃহীত)।</strong>
+                    <span>এখন নিচের বাটন চেপে সম্পূর্ণ ১ GB জিপ প্যাকেজ ডাউনলোড করে মুশফিকুরের সাথে গুগল ড্রাইভে শেয়ার করুন।</span>
+                </div>
+            </div>
+            <div class="milestone-actions">
+                <button id="btnDownloadMilestoneZip" class="milestone-download-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    DOWNLOAD 1 GB ZIP ARCHIVE
+                </button>
+            </div>
+        </div>
+
         <!-- Domain Selection Strip (4 Domains: Pure Minimal Tabs) -->
         <section class="domain-strip">
             <button class="domain-tab active" data-domain="physics">

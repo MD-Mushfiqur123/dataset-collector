@@ -169,6 +169,31 @@ class CollectorHTTPHandler(BaseHTTPRequestHandler):
                 "repo": pusher.state.get("github_repo", "Dataset"),
                 "has_token": bool(pusher.state.get("github_token"))
             })
+        elif path == "/api/download_zip":
+            import zipfile
+            import io
+            zip_buffer = io.BytesIO()
+            shards = list(pusher.shards_dir.glob("*.jsonl.gz"))
+            raw_buffers = list(pusher.buffer_dir.glob("*.jsonl"))
+
+            with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zf:
+                for s in shards:
+                    zf.write(s, arcname=f"shards/{s.name}")
+                for b in raw_buffers:
+                    zf.write(b, arcname=f"buffer/{b.name}")
+                registry_file = PROJECT_DIR / "data" / "registry.json"
+                if registry_file.exists():
+                    zf.write(registry_file, arcname="registry.json")
+
+            zip_data = zip_buffer.getvalue()
+            filename = f"mushfiqur_scientific_dataset_{datetime.now().strftime('%Y%m%d_%H%M%S')}.zip"
+            self.send_response(200)
+            self.send_header("Content-Type", "application/zip")
+            self.send_header("Content-Disposition", f'attachment; filename="{filename}"')
+            self.send_header("Content-Length", str(len(zip_data)))
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            self.wfile.write(zip_data)
         else:
             self.send_error(404)
 
@@ -328,6 +353,15 @@ class CollectorHTTPHandler(BaseHTTPRequestHandler):
             status_code = 200 if res.get("success") else 400
             self._send_json(status_code, res)
 
+        elif path == "/api/compress_now":
+            shards = pusher.compress_buffer_to_shards()
+            telemetry = pusher.get_telemetry()
+            self._send_json(200, {
+                "success": True,
+                "message": f"Successfully compressed buffer into {len(shards)} shard(s) and pruned raw buffer files!",
+                "shards_created": len(shards),
+                "telemetry": telemetry
+            })
 
         else:
             self.send_error(404)

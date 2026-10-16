@@ -188,6 +188,244 @@ body {
 }
 
 /* ==========================================================================
+   Dual-Stage Rolling Storage Telemetry (S1 Uncomp & S2 Comp)
+   ========================================================================== */
+.storage-telemetry-banner {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 4px;
+}
+
+.storage-card {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    transition: all 0.2s ease;
+}
+
+.storage-card:hover {
+    border-color: #CBD5E1;
+}
+
+.storage-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.storage-badge-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.storage-tag {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 700;
+    color: #0F172A;
+    letter-spacing: 0.5px;
+}
+
+.storage-type-pill {
+    background: #EFF6FF;
+    color: #2563EB;
+    border: 1px solid #BFDBFE;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.storage-type-pill.s2-pill {
+    background: #F0FDF4;
+    color: #16A34A;
+    border-color: #BBF7D0;
+}
+
+.storage-capacity {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 700;
+    color: #0F172A;
+}
+
+.storage-progress-track {
+    width: 100%;
+    height: 9px;
+    background: #E2E8F0;
+    border-radius: 5px;
+    overflow: hidden;
+    position: relative;
+}
+
+.storage-progress-fill {
+    height: 100%;
+    width: 0%;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 5px;
+}
+
+.storage-progress-fill.s1-fill {
+    background: linear-gradient(90deg, #3B82F6 0%, #2563EB 100%);
+}
+
+.storage-progress-fill.s2-fill {
+    background: linear-gradient(90deg, #10B981 0%, #059669 100%);
+}
+
+.storage-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.storage-status-note {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.storage-footer-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.storage-action-btn {
+    background: #FFFFFF;
+    color: #0F172A;
+    border: 1px solid #CBD5E1;
+    border-radius: 4px;
+    padding: 3px 8px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.storage-action-btn:hover {
+    background: #0F172A;
+    color: #FFFFFF;
+    border-color: #0F172A;
+}
+
+.storage-percent {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    color: #0F172A;
+    min-width: 42px;
+    text-align: right;
+}
+
+/* ==========================================================================
+   1 GB Milestone Banner (When S2 reaches 1 GB)
+   ========================================================================== */
+.milestone-zip-banner {
+    background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    color: #FFFFFF;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+    margin-bottom: 4px;
+    animation: fadeInSlide 0.3s ease-out;
+}
+
+.milestone-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.milestone-badge {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 800;
+    color: #FACC15;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.milestone-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.milestone-text strong {
+    color: #F8FAFC;
+    font-weight: 600;
+}
+
+.milestone-text span {
+    color: #94A3B8;
+    font-size: 12px;
+}
+
+.milestone-download-btn {
+    background: #10B981;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
+    transition: all 0.2s ease;
+}
+
+.milestone-download-btn:hover {
+    background: #059669;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4);
+}
+
+@keyframes fadeInSlide {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 900px) {
+    .storage-telemetry-banner {
+        grid-template-columns: 1fr;
+    }
+    .milestone-zip-banner {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .milestone-download-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* ==========================================================================
    Domain Strip (4 Domains with Scientific Color Identity)
    ========================================================================== */
 .domain-strip {

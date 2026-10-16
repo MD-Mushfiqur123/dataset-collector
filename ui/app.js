@@ -134,6 +134,18 @@ const btnExportShard = document.getElementById("btnExportShard");
 const btnClear = document.getElementById("btnClear");
 const toast = document.getElementById("toast");
 
+// Dual-Stage Rolling Storage Telemetry Elements
+const s1CapacityText = document.getElementById("s1CapacityText");
+const s1ProgressFill = document.getElementById("s1ProgressFill");
+const s1PercentText = document.getElementById("s1PercentText");
+const s2CapacityText = document.getElementById("s2CapacityText");
+const s2ProgressFill = document.getElementById("s2ProgressFill");
+const s2PercentText = document.getElementById("s2PercentText");
+const btnCompressNow = document.getElementById("btnCompressNow");
+const btnDownloadZipQuick = document.getElementById("btnDownloadZipQuick");
+const milestoneZipBanner = document.getElementById("milestoneZipBanner");
+const btnDownloadMilestoneZip = document.getElementById("btnDownloadMilestoneZip");
+
 const btnOpenGhModal = document.getElementById("btnOpenGhModal");
 const ghModal = document.getElementById("ghModal");
 const btnCloseGhModal = document.getElementById("btnCloseGhModal");
@@ -257,6 +269,51 @@ function clearLocalBuffer() {
     updateLocalStats();
 }
 
+function renderStorageTelemetry(s1Bytes, s2Bytes) {
+    const target1GB = 1024 * 1024 * 1024; // 1 GB in bytes
+    const s1MB = (s1Bytes / (1024 * 1024)).toFixed(2);
+    const s1Pct = Math.min(100, (s1Bytes / target1GB) * 100).toFixed(1);
+
+    const s2MB = (s2Bytes / (1024 * 1024)).toFixed(2);
+    const s2Pct = Math.min(100, (s2Bytes / target1GB) * 100).toFixed(1);
+
+    if (s1CapacityText) s1CapacityText.textContent = `${s1MB} MB / 1 GB`;
+    if (s1ProgressFill) s1ProgressFill.style.width = `${s1Pct}%`;
+    if (s1PercentText) s1PercentText.textContent = `${s1Pct}%`;
+
+    if (s2CapacityText) s2CapacityText.textContent = `${s2MB} MB / 1 GB`;
+    if (s2ProgressFill) s2ProgressFill.style.width = `${s2Pct}%`;
+    if (s2PercentText) s2PercentText.textContent = `${s2Pct}%`;
+
+    // When S2 reaches 1 GB (or 100%), reveal milestone banner
+    if (milestoneZipBanner) {
+        if (s2Bytes >= target1GB || parseFloat(s2Pct) >= 100.0) {
+            milestoneZipBanner.style.display = "flex";
+        } else {
+            milestoneZipBanner.style.display = "none";
+        }
+    }
+}
+
+async function fetchServerStats() {
+    if (!isLocalServer) return;
+    try {
+        const res = await fetch("/api/stats");
+        if (res.ok) {
+            const data = await res.json();
+            renderStorageTelemetry(data.s1_uncomp_bytes || 0, data.s2_comp_bytes || 0);
+            if (bufferDisplay) {
+                bufferDisplay.textContent = `${data.s1_uncomp_mb || 0} MB / 1024 MB (${data.s1_uncomp_percent || 0}%)`;
+            }
+            if (pushStatusPill) {
+                pushStatusPill.textContent = `SHARDS: ${data.total_pushed_shards || 0} | SAMPLES: ${data.total_pushed_samples || 0}`;
+            }
+        }
+    } catch (e) {
+        // silent fallback
+    }
+}
+
 function updateLocalStats() {
     const buffer = getLocalBuffer();
     const count = buffer.length;
@@ -267,6 +324,14 @@ function updateLocalStats() {
 
     bufferDisplay.textContent = `${kb} KB / 1024 MB (${((bytes / (1024 * 1024 * 1024)) * 100).toFixed(2)}%)`;
     pushStatusPill.textContent = `LOCAL SHARDS: ${count}`;
+
+    if (isLocalServer) {
+        fetchServerStats();
+    } else {
+        const rawBytes = bytes;
+        const compBytes = Math.round(rawBytes * 0.053); // ~18.8x compression ratio for gzip Bengali text
+        renderStorageTelemetry(rawBytes, compBytes);
+    }
 
     if (count === 0) {
         shardsList.innerHTML = `<div class="shard-item empty">Zero setup required. Your submissions are preserved locally and pushed directly to GitHub.</div>`;
@@ -699,6 +764,7 @@ async function submitRecord() {
                 showToast(result.message || "Record successfully validated and pushed!");
                 saveSignature(payload.id, `${payload.prompt} ${payload.response}`, payload.domain);
                 clearForm();
+                await fetchServerStats();
                 btnSubmit.disabled = false;
                 btnSubmit.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> 🚀 SUBMIT &amp; PUSH TO DATASET`;
                 return;
@@ -785,6 +851,34 @@ function exportLocalShard() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     showToast(`Exported ${buffer.length} records as .jsonl!`);
+}
+
+// Manual Compress Trigger (Prunes raw buffer & creates .jsonl.gz shard)
+async function triggerManualCompress() {
+    if (isLocalServer) {
+        try {
+            showToast("⚡ র' বাফার সংকুচিত ও ডিলিট করা হচ্ছে...");
+            const res = await fetch("/api/compress_now", { method: "POST" });
+            const data = await res.json();
+            showToast(data.message || "বাফার সংকুচিত হয়েছে এবং র' ফাইল ডিলিট হয়েছে!");
+            await fetchServerStats();
+        } catch (e) {
+            showToast("Compression request failed.");
+        }
+    } else {
+        exportLocalShard();
+        showToast("Static Web: Local shard exported as .jsonl!");
+    }
+}
+
+// Download 1 GB ZIP Archive
+function downloadZipArchive() {
+    if (isLocalServer) {
+        window.location.href = "/api/download_zip";
+        showToast("📦 জিপ ফাইল ডাউনলোড শুরু হয়েছে! গুগল ড্রাইভে আপলোড করে লিংক শেয়ার করুন।");
+    } else {
+        exportLocalShard();
+    }
 }
 
 // Push buffer to GitHub
@@ -1036,6 +1130,16 @@ function setupEventListeners() {
     btnForcePush.addEventListener("click", forcePush);
     btnExportShard.addEventListener("click", exportLocalShard);
     btnClear.addEventListener("click", clearForm);
+
+    if (btnCompressNow) {
+        btnCompressNow.addEventListener("click", triggerManualCompress);
+    }
+    if (btnDownloadZipQuick) {
+        btnDownloadZipQuick.addEventListener("click", downloadZipArchive);
+    }
+    if (btnDownloadMilestoneZip) {
+        btnDownloadMilestoneZip.addEventListener("click", downloadZipArchive);
+    }
 
     const btnLoadSample = document.getElementById("btnLoadSample");
     if (btnLoadSample) {

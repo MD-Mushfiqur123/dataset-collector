@@ -90,10 +90,13 @@ class ShardPusher:
         curr_bytes = self.get_buffer_size()
         trigger_reason = None
 
-        if self.state["unpushed_count"] >= AUTO_PUSH_COUNT_THRESHOLD:
+        if curr_bytes >= MAX_BUFFER_BYTES:
+            # S1 limit hit: immediately compress buffer to shards and purge raw files
+            compressed = self.compress_buffer_to_shards()
+            trigger_reason = f"s1_auto_compress ({len(compressed)} shards created, S1 raw purged)"
+            curr_bytes = self.get_buffer_size()
+        elif self.state["unpushed_count"] >= AUTO_PUSH_COUNT_THRESHOLD:
             trigger_reason = f"count_threshold ({self.state['unpushed_count']}/{AUTO_PUSH_COUNT_THRESHOLD})"
-        elif curr_bytes >= MAX_BUFFER_BYTES:
-            trigger_reason = f"disk_threshold ({curr_bytes / (1024*1024):.1f} MB / 1024 MB)"
 
         return {
             "unpushed_count": self.state["unpushed_count"],
@@ -342,8 +345,18 @@ class ShardPusher:
                 "freed_mb": 0.0
             }
 
+    def get_shards_size(self) -> int:
+        """Returns total bytes in the local compressed shards directory (S2)."""
+        total = 0
+        for f in self.shards_dir.glob("**/*"):
+            if f.is_file():
+                total += f.stat().st_size
+        return total
+
     def get_telemetry(self) -> dict:
         curr_bytes = self.get_buffer_size()
+        comp_bytes = self.get_shards_size()
+        target_1gb = 1024 * 1024 * 1024  # 1 GB
         return {
             "unpushed_count": self.state.get("unpushed_count", 0),
             "total_pushed_shards": self.state.get("total_pushed_shards", 0),
@@ -351,7 +364,14 @@ class ShardPusher:
             "total_disk_freed_mb": round(self.state.get("total_disk_freed_bytes", 0) / (1024 * 1024), 2),
             "buffer_bytes": curr_bytes,
             "buffer_mb": round(curr_bytes / (1024 * 1024), 2),
-            "buffer_percent": round((curr_bytes / MAX_BUFFER_BYTES) * 100, 2),
+            "buffer_percent": round((curr_bytes / target_1gb) * 100, 2),
+            "s1_uncomp_bytes": curr_bytes,
+            "s1_uncomp_mb": round(curr_bytes / (1024 * 1024), 2),
+            "s1_uncomp_percent": min(100.0, round((curr_bytes / target_1gb) * 100, 2)),
+            "s2_comp_bytes": comp_bytes,
+            "s2_comp_mb": round(comp_bytes / (1024 * 1024), 2),
+            "s2_comp_percent": min(100.0, round((comp_bytes / target_1gb) * 100, 2)),
+            "s2_is_full": comp_bytes >= target_1gb,
             "github_username": self.get_github_identity(),
-            "github_repo": self.state.get("github_repo", "Dataset")
+            "github_repo": self.state.get("github_repo", "scientific-reasoning-dataset")
         }
