@@ -285,9 +285,9 @@ function updateLocalStats() {
 function getGhConfig() {
     try {
         const raw = localStorage.getItem("mushfiqur_gh_config");
-        return raw ? JSON.parse(raw) : { username: "MD-Mushfiqur123", repo: "Dataset", token: "" };
+        return raw ? JSON.parse(raw) : { username: "MD-Mushfiqur123", repo: "dataset", token: "" };
     } catch (e) {
-        return { username: "MD-Mushfiqur123", repo: "Dataset", token: "" };
+        return { username: "MD-Mushfiqur123", repo: "dataset", token: "" };
     }
 }
 
@@ -298,9 +298,11 @@ function saveGhConfigLocal(username, repo, token) {
 
 function applyGhConfigUI() {
     const cfg = getGhConfig();
-    if (ghUser) ghUser.textContent = cfg.username || "MD-Mushfiqur123";
-    if (ghRepoName) ghRepoName.textContent = cfg.repo || "Dataset";
-    if (targetRepoLink) targetRepoLink.href = `https://github.com/${cfg.username || "MD-Mushfiqur123"}/${cfg.repo || "Dataset"}`;
+    const user = cfg.username || "MD-Mushfiqur123";
+    const repo = (cfg.repo || "dataset").toLowerCase() === "dataset" ? "dataset" : cfg.repo;
+    if (ghUser) ghUser.textContent = user;
+    if (ghRepoName) ghRepoName.textContent = repo;
+    if (targetRepoLink) targetRepoLink.href = `https://github.com/${user}/${repo}`;
 }
 
 // ==========================================================================
@@ -553,6 +555,71 @@ function renderRadarResult(allowed, similarity) {
 // ==========================================================================
 // 💾 SUBMISSION & EXPORT ENGINE
 // ==========================================================================
+const DOMAIN_SAMPLES = {
+    "physics": `[প্রশ্ন] একটি বস্তুর ভর ১০ কেজি এবং এটি ২০ মি/সে বেগে গতিশীল। বস্তুটির গতিশক্তি কত?
+
+<think>
+আমি পদার্থবিজ্ঞানের চিরায়ত বলবিদ্যার নিয়ম বিবেচনা করব।
+গতিশক্তির সমীকরণ: E_k = 1/2 * m * v^2।
+এখানে ভর m = 10 kg, বেগ v = 20 m/s।
+তাহলে E_k = 0.5 * 10 * (20)^2 = 0.5 * 10 * 400 = 2000 জুল।
+মাত্রিক সমীকরণ [M L^2 T^-2] এবং একক জুল (J) ঠিক আছে।
+</think>
+
+চূড়ান্ত সমাধান:
+প্রদত্ত বস্তুটির মোট গতিশক্তি ২০০০ জুল (2000 J)।`,
+
+    "chemistry": `[প্রশ্ন] ইথিনের সাথে ব্রোমিন পানির বিক্রিয়ার সমীকরণ ও মেকানিজম বাংলায় ব্যাখ্যা করো।
+
+<think>
+ইথিন (CH2=CH2) একটি অসম্পৃক্ত হাইড্রোকার্বন।
+ব্রোমিন পানির (Br2 in H2O) সাথে বিক্রিয়ায় দ্বিবন্ধনের পাই ইলেকট্রন দ্বারা ব্রোমিন অণুর মেরুকরণ ঘটে।
+একটি ব্রোমাইড আয়ন মুক্ত হয় এবং অন্তর্বর্তী ব্রোমোনিয়াম আয়ন গঠিত হয়।
+পরবর্তীতে বিপরীত দিক থেকে নিউক্লিওফিলিক আক্রমণ হয়ে ১,২-ডাইব্রোমোইথেন (CH2Br-CH2Br) তৈরি হয়।
+এর ফলে ব্রোমিন পানির লাল বর্ণ দূরীভূত হয়ে বর্ণহীন হয়।
+</think>
+
+চূড়ান্ত সমাধান:
+ইথিনের সাথে লাল বর্ণের ব্রোমিন পানি যুক্ত করলে ব্রোমিনের লাল বর্ণ বর্ণহীন হয়ে যায় এবং বর্ণহীন ১,২-ডাইব্রোমোইথেন উৎপন্ন হয়। এটি অ্যালকিনের অসম্পৃক্ততা পরীক্ষার একটি প্রধান বিক্রিয়া।`,
+
+    "mathematics": `[সমস্যা] সমাকলন নির্ণয় করো: ∫ x * e^x dx
+
+<think>
+আমরা ইন্টিগ্রেশন বাই পার্টস (Integration by Parts) সূত্র ব্যবহার করব:
+∫ u v dx = u ∫ v dx - ∫ (u' ∫ v dx) dx
+এখানে LIATE নিয়ম অনুসারে u = x (বীজগাণিতিক) এবং v = e^x (সূচকীয়)।
+তাহলে:
+1. u' = d/dx(x) = 1
+2. ∫ v dx = ∫ e^x dx = e^x
+মান বসিয়ে পাই:
+∫ x * e^x dx = x * e^x - ∫ 1 * e^x dx = x * e^x - e^x + C = e^x (x - 1) + C
+যেখানে C একটি সমাকলন ধ্রুবক।
+</think>
+
+চূড়ান্ত সমাধান:
+প্রদত্ত রাশির সমাকলিত রূপ: e^x (x - 1) + C, যেখানে C হলো একটি সমাকলন ধ্রুবক।`,
+
+    "biology": `[প্রশ্ন] কোষীয় শ্বসনে গ্লাইকোলাইসিস প্রক্রিয়ার মূল পর্যায় ও নিট শক্তি উৎপাদন বাংলায় ব্যাখ্যা করো।
+
+<think>
+গ্লাইকোলাইসিস সাইটোপ্লাজমে সম্পন্ন হয়। এটি সবাত ও অবাত উভয় শ্বসনেরই প্রাথমিক ধাপ।
+এক অণু গ্লুকোজ (৬ কার্বন) ক্রমান্বয়ে ভেঙে দুই অণু পাইরুভিক অ্যাসিডে (৩ কার্বন) পরিণত হয়।
+প্রক্রিয়াটিতে মোট ৪ অণু ATP এবং ২ অণু NADH+H+ উৎপন্ন হয়।
+কিন্তু প্রাথমিক ফসফোরাইলেশনে ২ অণু ATP ব্যয় হয়ে যায়।
+সুতরাং নিট লাভ = (৪ - ২) = ২ অণু ATP এবং ২ অণু NADH+H+।
+</think>
+
+চূড়ান্ত সমাধান:
+গ্লাইকোলাইসিস প্রক্রিয়ায় সাইটোপ্লাজমে ১ অণু গ্লুকোজ জারিত হয়ে ২ অণু পাইরুভিক অ্যাসিড উৎপন্ন করে এবং নিট শক্তি হিসেবে ২ অণু ATP ও ২ অণু NADH+H+ অর্জিত হয়।`
+};
+
+function loadDomainSample() {
+    const sample = DOMAIN_SAMPLES[currentDomain] || DOMAIN_SAMPLES["physics"];
+    inputRawPaste.value = sample;
+    handleRawPasteAutoSplit();
+    showToast(`✓ Loaded sample ${currentDomain.toUpperCase()} record!`);
+}
+
 async function submitRecord() {
     let payload = {};
 
@@ -563,7 +630,7 @@ async function submitRecord() {
         const raw = inputRawPaste.value.trim();
 
         if (!response && !raw) {
-            showToast("অনুগ্রহ করে আপনার AI আউটপুট পেস্ট করুন!");
+            showToast("অনুগ্রহ করে আপনার AI আউটপুট পেস্ট করুন বা 'LOAD SAMPLE' চাপুন!");
             inputRawPaste.focus();
             return;
         }
@@ -617,9 +684,9 @@ async function submitRecord() {
     }
 
     btnSubmit.disabled = true;
-    btnSubmit.innerHTML = `<span class="radar-dot"></span> SAVING...`;
+    btnSubmit.innerHTML = `<span class="radar-dot"></span> PUSHING...`;
 
-    // 1. Try local server if available
+    // 1. Try local server if running locally
     if (isLocalServer) {
         try {
             const res = await fetch("/api/submit", {
@@ -629,27 +696,74 @@ async function submitRecord() {
             });
             if (res.ok) {
                 const result = await res.json();
-                showToast(result.message || "Record successfully validated and buffered!");
+                showToast(result.message || "Record successfully validated and pushed!");
                 saveSignature(payload.id, `${payload.prompt} ${payload.response}`, payload.domain);
                 clearForm();
                 btnSubmit.disabled = false;
-                btnSubmit.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> SUBMIT RECORD`;
+                btnSubmit.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> 🚀 SUBMIT &amp; PUSH TO DATASET`;
                 return;
             }
         } catch (e) {
-            console.log("Local server unavailable, saving to client buffer.");
+            console.log("Local server unavailable, executing web push.");
         }
     }
 
-    // 2. Client-side storage (GitHub Pages mode)
+    // 2. Client-side storage & instant push to GitHub
     saveToLocalBuffer(payload);
     saveSignature(payload.id, `${payload.prompt} ${payload.response}`, payload.domain);
+    updateLocalStats();
 
-    showToast("✓ Record validated & buffered locally! Ready to push or export.");
+    const cfg = getGhConfig();
+    if (cfg.token) {
+        showToast("🚀 Pushing record directly to GitHub via Token...");
+        await pushRecordToGitHub(payload);
+    } else {
+        showToast("🚀 Opening 1-Click Ingestion on GitHub...");
+        submitViaGitHubIssue([payload]);
+    }
+
     clearForm();
-
     btnSubmit.disabled = false;
-    btnSubmit.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> SUBMIT RECORD`;
+    btnSubmit.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> 🚀 SUBMIT &amp; PUSH TO DATASET`;
+}
+
+// Push a single record directly to GitHub repository via REST API
+async function pushRecordToGitHub(record) {
+    const cfg = getGhConfig();
+    const user = cfg.username || "MD-Mushfiqur123";
+    const repo = (cfg.repo || "dataset").toLowerCase() === "dataset" ? "dataset" : cfg.repo;
+
+    try {
+        const dateStr = new Date().toISOString().replace(/[:\-]|\.\d{3}/g, "").slice(0, 15);
+        const filename = `shards/mushfiqur_${record.domain}_shard_${dateStr}.jsonl`;
+        const content = JSON.stringify(record) + "\n";
+        const b64Content = btoa(unescape(encodeURIComponent(content)));
+
+        const url = `https://api.github.com/repos/${user}/${repo}/contents/${filename}`;
+        const res = await fetch(url, {
+            method: "PUT",
+            headers: {
+                "Authorization": `Bearer ${cfg.token}`,
+                "Content-Type": "application/json",
+                "Accept": "application/vnd.github.v3+json"
+            },
+            body: JSON.stringify({
+                message: `feat(dataset): add 1 verified ${record.domain} CoT record [distilled]`,
+                content: b64Content
+            })
+        });
+
+        if (res.ok) {
+            showToast(`✓ Successfully pushed directly to ${user}/${repo}!`);
+        } else {
+            const err = await res.json();
+            showToast(`GitHub Error: ${err.message || "Failed to commit"}`);
+            submitViaGitHubIssue([record]);
+        }
+    } catch (e) {
+        showToast("Network error. Opening GitHub Issue fallback...");
+        submitViaGitHubIssue([record]);
+    }
 }
 
 // Export Local Shard as .jsonl file
@@ -673,7 +787,7 @@ function exportLocalShard() {
     showToast(`Exported ${buffer.length} records as .jsonl!`);
 }
 
-// Push to GitHub
+// Push buffer to GitHub
 async function forcePush() {
     const buffer = getLocalBuffer();
     if (buffer.length === 0 && !isLocalServer) {
@@ -700,8 +814,10 @@ async function forcePush() {
 
     // Client GitHub Push via REST API
     const cfg = getGhConfig();
+    const user = cfg.username || "MD-Mushfiqur123";
+    const repo = (cfg.repo || "dataset").toLowerCase() === "dataset" ? "dataset" : cfg.repo;
+
     if (!cfg.token) {
-        // Offer Community Issue Submission or PAT entry
         showToast("🚀 Zero-Token Ingestion: Opening automated GitHub submission...");
         submitViaGitHubIssue(buffer);
         btnForcePush.disabled = false;
@@ -715,7 +831,7 @@ async function forcePush() {
         const content = buffer.map(r => JSON.stringify(r)).join("\n");
         const b64Content = btoa(unescape(encodeURIComponent(content)));
 
-        const url = `https://api.github.com/repos/${cfg.username}/${cfg.repo}/contents/${filename}`;
+        const url = `https://api.github.com/repos/${user}/${repo}/contents/${filename}`;
         const res = await fetch(url, {
             method: "PUT",
             headers: {
@@ -730,12 +846,11 @@ async function forcePush() {
         });
 
         if (res.ok) {
-            showToast(`✓ Successfully pushed ${buffer.length} records to ${cfg.username}/${cfg.repo}!`);
+            showToast(`✓ Successfully pushed ${buffer.length} records to ${user}/${repo}!`);
             clearLocalBuffer();
         } else {
             const err = await res.json();
             showToast(`GitHub Error: ${err.message || "Failed to commit"}`);
-            // Fallback to Issue
             submitViaGitHubIssue(buffer);
         }
     } catch (e) {
@@ -746,9 +861,13 @@ async function forcePush() {
     }
 }
 
-// 1-Click Community Issue Submission (Zero Token Required, Processed by GitHub Actions Bot)
+// 1-Click Community Issue Submission directly to MD-Mushfiqur123/dataset
 function submitViaGitHubIssue(buffer) {
     if (!buffer || buffer.length === 0) return;
+    const cfg = getGhConfig();
+    const user = cfg.username || "MD-Mushfiqur123";
+    const repo = (cfg.repo || "dataset").toLowerCase() === "dataset" ? "dataset" : cfg.repo;
+
     const title = encodeURIComponent(`[Dataset Submission] ${currentDomain.toUpperCase()} (${buffer.length} records)`);
     const bodyContent = `### 🧬 Community Dataset Submission (${currentDomain.toUpperCase()})
 **Records in batch:** ${buffer.length}
@@ -759,9 +878,9 @@ function submitViaGitHubIssue(buffer) {
 ${JSON.stringify(buffer, null, 2)}
 \`\`\`
 
-*(🤖 Note: This submission will be automatically verified by Mushfiqur's GitHub Actions Bot. Valid unique records [<83% similarity] will be auto-merged into official shards and this issue will be closed automatically.)*`;
+*(🤖 Note: This submission will be automatically verified by Mushfiqur's GitHub Actions Bot. Valid unique records [<83% similarity] will be auto-merged into official shards in ${user}/${repo} and this issue will be closed automatically.)*`;
 
-    const issueUrl = `https://github.com/MD-Mushfiqur123/dataset-collector/issues/new?title=${title}&body=${encodeURIComponent(bodyContent)}&labels=dataset-submission,bengali-reasoning`;
+    const issueUrl = `https://github.com/${user}/${repo}/issues/new?title=${title}&body=${encodeURIComponent(bodyContent)}&labels=dataset-submission,bengali-reasoning`;
     window.open(issueUrl, "_blank");
 }
 
@@ -905,6 +1024,11 @@ function setupEventListeners() {
     btnForcePush.addEventListener("click", forcePush);
     btnExportShard.addEventListener("click", exportLocalShard);
     btnClear.addEventListener("click", clearForm);
+
+    const btnLoadSample = document.getElementById("btnLoadSample");
+    if (btnLoadSample) {
+        btnLoadSample.addEventListener("click", loadDomainSample);
+    }
 
     btnOpenGhModal.addEventListener("click", openGhModal);
     btnCloseGhModal.addEventListener("click", closeGhModal);

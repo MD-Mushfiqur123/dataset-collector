@@ -33,7 +33,7 @@
             <div class="telemetry-cluster">
                 <div class="telemetry-pill">
                     <span class="pill-label">REPO:</span>
-                    <a id="targetRepoLink" href="https://github.com/MD-Mushfiqur123/Dataset" target="_blank" class="pill-value">github.com/<span id="ghUser">MD-Mushfiqur123</span>/<span id="ghRepoName">Dataset</span></a>
+                    <a id="targetRepoLink" href="https://github.com/MD-Mushfiqur123/dataset" target="_blank" class="pill-value">github.com/<span id="ghUser">MD-Mushfiqur123</span>/<span id="ghRepoName">dataset</span></a>
                 </div>
 
                 <div class="telemetry-pill">
@@ -150,7 +150,10 @@
                                 <label class="form-label" for="inputRawPaste">
                                     PASTE FULL AI OUTPUT (এখানে পুরো টেক্সট পেস্ট করুন):
                                 </label>
-                                <span class="auto-badge">⚡ ALGORITHM WILL AUTO-SPLIT &lt;think&gt; &amp; SOLUTION</span>
+                                <div style="display: flex; gap: 8px; align-items: center;">
+                                    <button type="button" id="btnLoadSample" class="swiss-btn-sample" title="একটি প্রস্তুত করা নমুনা প্রশ্ন ও উত্তর লোড করুন">🎲 LOAD SAMPLE</button>
+                                    <span class="auto-badge">⚡ ALGORITHM WILL AUTO-SPLIT &lt;think&gt; &amp; SOLUTION</span>
+                                </div>
                             </div>
                             <textarea id="inputRawPaste" class="swiss-textarea h-md" placeholder="DeepSeek বা ChatGPT থেকে প্রাপ্ত সম্পূর্ণ আউটপুট (সমস্যা, <think> চিন্তন ও চূড়ান্ত উত্তর) সরাসরি এখানে একবারে পেস্ট করুন। অ্যালগরিদম স্বয়ংক্রিয়ভাবে আলাদা করে নেবে..."></textarea>
                         </div>
@@ -235,9 +238,9 @@
 
                         <div class="btn-group">
                             <button id="btnClear" class="swiss-btn-secondary">CLEAR</button>
-                            <button id="btnSubmit" class="swiss-btn-primary">
+                            <button id="btnSubmit" class="swiss-btn-primary" title="ডেটাসেট রেকর্ড জমা দিন এবং সরাসরি রিপোসিটরিতে পুশ করুন">
                                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                SUBMIT RECORD
+                                🚀 SUBMIT &amp; PUSH TO DATASET
                             </button>
                         </div>
                     </div>

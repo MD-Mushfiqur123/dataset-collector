@@ -546,6 +546,25 @@ body[data-active-domain="biology"] .prompt-panel .badge-tag {
     color: var(--text-muted);
 }
 
+.swiss-btn-sample {
+    background: #EEF2FF;
+    color: #4F46E5;
+    border: 1px solid #C7D2FE;
+    border-radius: 4px;
+    padding: 3px 8px;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.swiss-btn-sample:hover {
+    background: #4F46E5;
+    color: #FFFFFF;
+    border-color: #4F46E5;
+}
+
 .swiss-textarea {
     width: 100%;
     background: #FAFAFA;
