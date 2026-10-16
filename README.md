@@ -8,6 +8,24 @@
 
 ---
 
+## ⚡ 1-Command Instant Download & Launch
+
+No installation, no manual git clone, zero `pip install`. Paste **one command** in your terminal:
+
+### 🪟 Windows (PowerShell)
+```powershell
+irm https://raw.githubusercontent.com/MD-Mushfiqur123/dataset-collector/main/install.ps1 | iex
+```
+
+### 🐧 Linux / macOS / WSL (Bash)
+```bash
+curl -fsSL https://raw.githubusercontent.com/MD-Mushfiqur123/dataset-collector/main/install.sh | bash
+```
+
+> **Note:** Automatically checks Python 3, fetches the latest release, starts the server at `http://localhost:7860/`, and opens your browser.
+
+---
+
 ## 🏛️ Executive Overview
 
 **Mushfiqur Dataset Forge** is a zero-external-dependency, distributed scientific dataset ingestion and distillation engine crafted under strict Swiss Minimalist design principles. Built specifically for high-reasoning frontier models (DeepSeek-R1, OpenAI o1/o3, Claude 3.7 Sonnet), it allows researchers and contributors to curate, validate, deduplicate, shard, and push scientific Bengali reasoning data directly to GitHub repositories.
