@@ -88,35 +88,34 @@ class ShardPusher:
         self._save_state()
 
         curr_bytes = self.get_buffer_size()
-        trigger_reason = None
+        compressed_now = False
 
         if curr_bytes >= MAX_BUFFER_BYTES:
-            # S1 limit hit: immediately compress buffer to shards and purge raw files
+            # S1 limit hit: immediately compress buffer to S2 and purge raw files locally!
             compressed = self.compress_buffer_to_shards()
-            trigger_reason = f"s1_auto_compress ({len(compressed)} shards created, S1 raw purged)"
+            compressed_now = True
             curr_bytes = self.get_buffer_size()
-        elif self.state["unpushed_count"] >= AUTO_PUSH_COUNT_THRESHOLD:
-            trigger_reason = f"count_threshold ({self.state['unpushed_count']}/{AUTO_PUSH_COUNT_THRESHOLD})"
 
         return {
             "unpushed_count": self.state["unpushed_count"],
             "buffer_bytes": curr_bytes,
             "buffer_mb": round(curr_bytes / (1024 * 1024), 2),
             "max_mb": 1024.0,
-            "auto_trigger": bool(trigger_reason),
-            "trigger_reason": trigger_reason
+            "compressed_now": compressed_now,
+            "trigger_reason": "s1_auto_compress" if compressed_now else None
         }
 
     def compress_buffer_to_shards(self) -> List[Path]:
         """
-        Compresses active buffer files into .jsonl.gz shards ready for GitHub upload.
+        Compresses active buffer files into .jsonl.gz shards ready for storage.
+        100% offline and preserves shards in data/shards/.
         """
         created_shards = []
         raw_files = list(self.buffer_dir.glob("current_*.jsonl"))
 
         for rf in raw_files:
             domain = rf.stem.replace("current_", "")
-            shard_num = self.state["total_pushed_shards"] + len(created_shards) + 1
+            shard_num = self.state.get("total_pushed_shards", 0) + len(created_shards) + 1
             shard_name = f"mushfiqur_{domain}_shard_{shard_num:05d}.jsonl.gz"
             shard_path = self.shards_dir / shard_name
 
@@ -126,7 +125,7 @@ class ShardPusher:
                     shutil.copyfileobj(f_in, f_out)
 
             created_shards.append(shard_path)
-            # Remove raw uncompressed buffer
+            # Remove raw uncompressed buffer to prevent user disk bloat
             try:
                 rf.unlink()
             except Exception:
@@ -135,20 +134,11 @@ class ShardPusher:
         return created_shards
 
     def get_github_identity(self) -> str:
-        """Inspects custom set username or gh CLI logged-in username."""
+        """Inspects custom set username or defaults to Offline Contributor without network delay."""
         custom = self.state.get("github_username")
         if custom:
             return custom
-        try:
-            res = subprocess.run(["gh", "api", "user", "--jq", ".login"], capture_output=True, text=True, timeout=10)
-            if res.returncode == 0 and res.stdout.strip():
-                uname = res.stdout.strip()
-                self.state["github_username"] = uname
-                self._save_state()
-                return uname
-        except Exception:
-            pass
-        return "MD-Mushfiqur123"
+        return "Offline Contributor"
 
     def set_github_config(self, username: str, repo: str = "Dataset", token: str = "") -> dict:
         """Allows any user worldwide to connect their own GitHub account."""

@@ -305,25 +305,12 @@ class CollectorHTTPHandler(BaseHTTPRequestHandler):
             # 🛡️ Step 2: Register in Gatekeeper Signatures
             gatekeeper.register_sample(sample_id, full_text, domain)
 
-            # 🛡️ Step 3: Append to Shard Pusher Buffer (Checks 5 items & 1 GB limit)
+            # 🛡️ Step 3: Append to Shard Pusher Buffer (100% Offline Local Vault)
             buffer_status = pusher.append_sample(sample_record)
 
-            push_result = None
-            if buffer_status.get("auto_trigger"):
-                print(f"[AUTO-PUSH TRIGGERED] Reason: {buffer_status.get('trigger_reason')}")
-                push_result = pusher.push_to_github()
-                if push_result.get("success") and push_result.get("shards_pushed", 0) > 0:
-                    registry.register_shard(
-                        shard_name=f"{domain}_auto_shard",
-                        domain=domain,
-                        sample_count=buffer_status["unpushed_count"],
-                        token_count=est_tokens,
-                        file_size_bytes=buffer_status["buffer_bytes"]
-                    )
-
-            msg = "Record validated (<83% similarity) and saved to local buffer."
-            if push_result and push_result.get("success"):
-                msg += f" {push_result.get('message')}"
+            msg = "Record validated (<83% similarity) and saved to local S1 buffer."
+            if buffer_status.get("compressed_now"):
+                msg = "S1 hit 1 GB limit! Auto-compressed into S2 vault (.jsonl.gz) and purged raw buffer to save disk."
 
             self._send_json(200, {
                 "success": True,
@@ -331,7 +318,6 @@ class CollectorHTTPHandler(BaseHTTPRequestHandler):
                 "domain": domain,
                 "tokens": est_tokens,
                 "buffer_status": buffer_status,
-                "push_result": push_result,
                 "message": msg
             })
 
