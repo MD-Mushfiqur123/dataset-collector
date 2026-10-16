@@ -1,21 +1,90 @@
-// Swiss Minimalist Dataset Collector Client Logic with 1-Paste Intelligent Auto-Split
+// Swiss Minimalist Dataset Collector Client Logic (Dual-Mode: Static Web & Local Server)
 // Author: Md. Mushfiqur Rahim & L
+// Target: GitHub Pages (https://md-mushfiqur123.github.io/dataset-collector/) & Localhost
+
+const DEFAULT_DOMAINS = {
+    "physics": {
+        "id": "physics",
+        "name": "পদার্থবিজ্ঞান",
+        "name_en": "Physics",
+        "category": "STEM / Science",
+        "icon": "atom",
+        "accent": "#38BDF8",
+        "description": "বলবিদ্যা, তাপগতিবিদ্যা, তড়িৎচুম্বকত্ব, আধুনিক পদার্থবিজ্ঞান ও কোয়ান্টাম মেকানিক্স।",
+        "master_prompt": `[নির্দেশনা: তোমার সম্পূর্ণ অভ্যন্তরীণ চিন্তা (Internal Reasoning/Thinking Process) এবং চূড়ান্ত সমাধান—উভয়ই ১০০% বিশুদ্ধ প্রমিত বাংলাতে সম্পন্ন করতে হবে। কোনো ইংরেজি বাক্য বা অপব্যাখ্যা ব্যবহার করবে না।]
+
+তুমি একজন বিশ্বমানের পদার্থবিজ্ঞানী, তাত্ত্বিক গবেষক ও শিক্ষক।
+পদার্থবিজ্ঞানের নিচের বিষয়বস্তুর ওপর একটি উচ্চমানের, গভীর, বাস্তবসম্মত এবং চ্যালেঞ্জিং গাণিতিক/ধারণাগত সমস্যা তৈরি করো এবং প্রথম মূলনীতি (First Principles) থেকে ধাপে ধাপে গভীর চিন্তা (Deep Chain-of-Thought Reasoning) করে বাংলায় একটি নিখুঁত, তথ্যবহুল সমাধান প্রস্তুত করো:
+
+পদ্ধতি ও আবশ্যিক শর্তাবলী:
+১. <think> ট্যাগের ভেতর সম্পূর্ণ অভ্যন্তরীণ চিন্তা বাংলায় সাজাও। প্রতিটি ভৌত সূত্রের উৎপত্তি, চলক, ভেক্টর রূপ ও মাত্রিক শুদ্ধতা যাচাই করো।
+২. সমস্যাটি বাস্তব জীবনের ভৌত ঘটনা বা উচ্চতর অলিম্পিয়াড/বিশ্ববিদ্যালয় পরীক্ষার ধারণাগত গভীরতায় সাজাও।
+৩. প্রতিটি সূত্র, ডেরিভেশন ও ক্যালকুলাস ভিত্তিক ব্যবকলন বাংলায় যুক্তিসহ বুঝিয়ে বলো।
+৪. সমাপনী উত্তরে চূড়ান্ত ফলাফল, বৈজ্ঞানিক তাৎপর্য ও একক স্পষ্ট করে বোল্ড/বক্সড করো।`
+    },
+    "chemistry": {
+        "id": "chemistry",
+        "name": "রসায়ন",
+        "name_en": "Chemistry",
+        "category": "STEM / Science",
+        "icon": "flask",
+        "accent": "#10B981",
+        "description": "জৈব রসায়ন মেকানিজম, রাসায়নিক বন্ধন, সংকরায়ন, রাসায়নিক সাম্যাবস্থা ও স্টয়কিওমেট্রি।",
+        "master_prompt": `[নির্দেশনা: তোমার সম্পূর্ণ অভ্যন্তরীণ চিন্তা (Internal Reasoning) এবং চূড়ান্ত আউটপুট ১০০% বিশুদ্ধ প্রমিত বাংলায় সম্পন্ন করতে হবে।]
+
+তুমি একজন প্রথিতযশা রসায়নবিদ ও বিশ্ববিদ্যালয়ের অধ্যাপক।
+রসায়নের একটি অত্যন্ত গুরুত্বপূর্ণ, জটিল ও গভীর ধারণাগত সমস্যা অথবা বিক্রিয়া মেকানিজম উপস্থাপন করো এবং ধাপে ধাপে গভীর বৈজ্ঞানিক যুক্তিসহকারে (Deep Chain-of-Thought Reasoning) বাংলায় সম্পূর্ণ সমাধান প্রস্তুত করো:
+
+পদ্ধতি ও আবশ্যিক শর্তাবলী:
+১. <think> ট্যাগের ভেতর সম্পূর্ণ চিন্তা বাংলায় করো। বিক্রিয়ার প্রতিটি ইলেকট্রন স্থানান্তর, ইলেকট্রোফাইল/নিউক্লিওফাইল ভূমিকা, অরবিটাল সংকরায়ন (Hybridization), ও মুক্ত শক্তি বা এনথালপির পরিবর্তন (ΔH, ΔG) বিশ্লেষণ করো।
+২. সমতাকৃত রাসায়নিক সমীকরণ, প্রতিটি অন্তর্বর্তী যৌগ (Intermediate state) এবং বিক্রিয়া মেকানিজমের প্রতিটি তীরচিহ্ন যুক্তিযুক্তভাবে বাংলায় ব্যাখ্যা করো।
+৩. কোনো আনুমানিক বা ভুল বিক্রিয়া দেওয়া যাবে না—কেবল পরীক্ষিত বিজ্ঞানভিত্তিক তথ্য ও সত্য উপস্থাপন করো।
+৪. পরিশেষে উৎপাদ ও এর বৈশিষ্ট্য পরিষ্কারভাবে উল্লেখ করো।`
+    },
+    "mathematics": {
+        "id": "mathematics",
+        "name": "উচ্চতর গণিত",
+        "name_en": "Higher Mathematics",
+        "category": "STEM / Formal Science",
+        "icon": "sigma",
+        "accent": "#F59E0B",
+        "description": "ক্যালকুলাস (লিমিট, ব্যবকলন, সমাকলন), স্থানাঙ্ক জ্যামিতি, বীজগণিত, ধারা ও সম্ভাবনা।",
+        "master_prompt": `[নির্দেশনা: তোমার সম্পূর্ণ অভ্যন্তরীণ চিন্তা (Internal Reasoning) এবং চূড়ান্ত প্রমাণ/সমাধান ১০০% বিশুদ্ধ প্রমিত বাংলায় সম্পন্ন করতে হবে।]
+
+তুমি একজন আন্তর্জাতিক গণিত অলিম্পিয়াড ট্রেইনার ও বিশুদ্ধ গণিতবিদ।
+উচ্চতর গণিতের একটি গভীর, চিত্তাকর্ষক এবং অলিম্পিয়াড/বিশ্ববিদ্যালয় মানের সমস্যা তৈরি করো এবং ধাপে ধাপে নিখুঁত গাণিতিক যুক্তি সহকারে বাংলায় সমাধান করো:
+
+পদ্ধতি ও আবশ্যিক শর্তাবলী:
+১. <think> ট্যাগের ভেতর সম্পূর্ণ চিন্তা বাংলায় করো। সমস্যাটিকে ভেঙে মৌলিক উপপাদ্য, শর্ত ও লেম্মায় বিশ্লেষণ করো।
+২. প্রতিটি বীজগণিতীয় রূপান্তর, ব্যবকলনীয় কৌশল, জ্যামিতিক বৈশিষ্ট্য এবং প্রমাণ পুঙ্খানুপুঙ্খভাবে স্পষ্ট করো। কোনো স্টেপ স্কিপ করবে না।
+৩. সম্ভাব্য ভুল সমাধান (Common Pitfalls) এবং এজ কেসগুলো বিশ্লেষণ করে দেখাও।
+৪. চূড়ান্ত উত্তরটি স্পষ্ট, নিখুঁত এবং বক্সড/বোল্ড আকারে চিহ্নিত করো।`
+    },
+    "biology": {
+        "id": "biology",
+        "name": "জীববিজ্ঞান",
+        "name_en": "Biology",
+        "category": "Life Sciences",
+        "icon": "dna",
+        "accent": "#A855F7",
+        "description": "কোষ ও আণবিক জীববিজ্ঞান, জিনতত্ত্ব, মানব শারীরতত্ত্ব, এনজাইমোলজি এবং ইকোলজি।",
+        "master_prompt": `[নির্দেশনা: তোমার সম্পূর্ণ অভ্যন্তরীণ চিন্তা (Internal Reasoning) এবং চূড়ান্ত আউটপুট ১০০% বিশুদ্ধ প্রমিত বাংলায় সম্পন্ন করতে হবে।]
+
+তুমি একজন বিশেষজ্ঞ আণবিক জীববিজ্ঞানী ও শারীরতত্ত্ববিদ।
+জীববিজ্ঞানের একটি জটিল শারীরবৃত্তীয় বা জিনগত মেকানিজমভিত্তিক প্রশ্ন উপস্থাপন করো এবং কোষীয়/আণবিক স্তরের গভীর বৈজ্ঞানিক যুক্তিসহকারে (Deep Chain-of-Thought Reasoning) বাংলায় বিশ্লেষণ করো:
+
+পদ্ধতি ও আবশ্যিক শর্তাবলী:
+১. <think> ট্যাগের ভেতর সম্পূর্ণ চিন্তা বাংলায় সাজাও। কোষের অভ্যন্তরে অণুসমূহের আন্তঃক্রিয়া ও শক্তি রূপান্তরের গতিপ্রকৃতি বিশ্লেষণ করো।
+২. জৈব রাসায়নিক চক্র, এনজাইম কার্যপ্রণালী, সংকেত প্রেরণ (Signal Transduction) ও জিন প্রকাশের (Transcription & Translation) ধাপে ধাপে বৈজ্ঞানিক বর্ণনা দাও।
+৩. চিকিৎসাবিজ্ঞান বা বাস্তুতন্ত্রে এই জৈবিক প্রক্রিয়ার বাস্তব গুরুত্ব স্পষ্টভাবে ব্যাখ্যা করো।`
+    }
+};
 
 let currentDomain = "physics";
-let currentMode = "smart"; // default: "smart" (1-Paste Auto-Split)
-let domainsData = {};
+let currentMode = "smart";
+let domainsData = DEFAULT_DOMAINS;
 let duplicateDebounceTimer = null;
-
-// Security Sanitization Helper against DOM XSS
-function escapeHtml(str) {
-    if (str === null || str === undefined) return "";
-    return String(str)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
+const isLocalServer = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
 
 // DOM Elements
 const masterPromptBox = document.getElementById("masterPromptBox");
@@ -23,12 +92,10 @@ const activeDomainHeading = document.getElementById("activeDomainHeading");
 const btnCopyPrompt = document.getElementById("btnCopyPrompt");
 const copyBtnText = document.getElementById("copyBtnText");
 
-// Mode Groups
 const smartFieldsGroup = document.getElementById("smartFieldsGroup");
 const manualFieldsGroup = document.getElementById("manualFieldsGroup");
 const transcriptGroup = document.getElementById("transcriptGroup");
 
-// Smart Auto-Split Elements
 const inputRawPaste = document.getElementById("inputRawPaste");
 const splitStatusText = document.getElementById("splitStatusText");
 const splitPrompt = document.getElementById("splitPrompt");
@@ -38,18 +105,15 @@ const splitPromptCount = document.getElementById("splitPromptCount");
 const splitReasoningCount = document.getElementById("splitReasoningCount");
 const splitResponseCount = document.getElementById("splitResponseCount");
 
-// Manual Mode Elements
 const inputPrompt = document.getElementById("inputPrompt");
 const inputReasoning = document.getElementById("inputReasoning");
 const inputResponse = document.getElementById("inputResponse");
 const thinkWordCount = document.getElementById("thinkWordCount");
 const responseWordCount = document.getElementById("responseWordCount");
 
-// Transcript Elements
 const inputTranscript = document.getElementById("inputTranscript");
 const transcriptWordCount = document.getElementById("transcriptWordCount");
 
-// Telemetry & Gatekeeper Metrics
 const tokenMetric = document.getElementById("tokenMetric");
 const wordMetric = document.getElementById("wordMetric");
 const gatekeeperStatus = document.getElementById("gatekeeperStatus");
@@ -61,50 +125,221 @@ const pushStatusPill = document.getElementById("pushStatusPill");
 const diskFreedTotal = document.getElementById("diskFreedTotal");
 const shardsList = document.getElementById("shardsList");
 const ghUser = document.getElementById("ghUser");
+const ghRepoName = document.getElementById("ghRepoName");
 const targetRepoLink = document.getElementById("targetRepoLink");
 
-// Buttons
 const btnSubmit = document.getElementById("btnSubmit");
 const btnForcePush = document.getElementById("btnForcePush");
+const btnExportShard = document.getElementById("btnExportShard");
 const btnClear = document.getElementById("btnClear");
 const toast = document.getElementById("toast");
 
-// GitHub Modal Elements
 const btnOpenGhModal = document.getElementById("btnOpenGhModal");
 const ghModal = document.getElementById("ghModal");
 const btnCloseGhModal = document.getElementById("btnCloseGhModal");
 const btnCancelGhModal = document.getElementById("btnCancelGhModal");
 const btnSaveGhConfig = document.getElementById("btnSaveGhConfig");
 const btnAutoDetectGh = document.getElementById("btnAutoDetectGh");
+const autodetectBanner = document.getElementById("autodetectBanner");
 const ghUsernameInput = document.getElementById("ghUsernameInput");
 const ghRepoInput = document.getElementById("ghRepoInput");
 const ghTokenInput = document.getElementById("ghTokenInput");
 const modalTargetUrl = document.getElementById("modalTargetUrl");
 
-// Initialize
-document.addEventListener("DOMContentLoaded", () => {
-    loadDomains();
-    setupEventListeners();
-    fetchStats();
-    setInterval(fetchStats, 6000);
-});
+// ==========================================================================
+// 🛡️ CLIENT-SIDE 83% DUPLICATE GATEKEEPER ENGINE (datas.paint spec)
+// ==========================================================================
+const SIMILARITY_THRESHOLD = 0.83; // 83% max repeat allowed
 
-// Load Domains from Backend
-async function loadDomains() {
+function normalizeText(text) {
+    return (text || "")
+        .replace(/[\s\n\r\t]+/g, ' ')
+        .replace(/[^\w\s\u0980-\u09FF]/g, '')
+        .trim()
+        .toLowerCase();
+}
+
+function extractShingles(text, k = 4) {
+    if (text.length > 50000) text = text.substring(0, 50000);
+    const norm = normalizeText(text);
+    if (norm.length < k) return new Set([norm]);
+    const shingles = new Set();
+    for (let i = 0; i <= norm.length - k; i++) {
+        shingles.add(norm.substring(i, i + k));
+    }
+    return shingles;
+}
+
+function jaccardSimilarity(setA, setB) {
+    if (!setA.size || !setB.size) return 0.0;
+    let intersection = 0;
+    for (const item of setA) {
+        if (setB.has(item)) intersection++;
+    }
+    const union = setA.size + setB.size - intersection;
+    return union > 0 ? (intersection / union) : 0.0;
+}
+
+function getStoredSignatures() {
     try {
-        const res = await fetch("/api/domains");
-        domainsData = await res.json();
-        updateDomainView(currentDomain);
+        const raw = localStorage.getItem("mushfiqur_dedup_signatures");
+        return raw ? JSON.parse(raw) : [];
     } catch (e) {
-        console.error("Failed to load domains", e);
+        return [];
     }
 }
 
-// Switch Domain
+function saveSignature(sampleId, text, domain) {
+    try {
+        const signatures = getStoredSignatures();
+        const shingles = Array.from(extractShingles(text));
+        signatures.push({
+            id: sampleId,
+            domain: domain,
+            timestamp: new Date().toISOString(),
+            shingles: shingles
+        });
+        // Keep last 10,000 in local storage
+        if (signatures.length > 10000) signatures.splice(0, signatures.length - 10000);
+        localStorage.setItem("mushfiqur_dedup_signatures", JSON.stringify(signatures));
+    } catch (e) {
+        console.warn("Could not save signature to localStorage", e);
+    }
+}
+
+function checkClientSimilarity(text) {
+    if (!text || text.trim().length < 15) {
+        return { allowed: true, similarity: 0.0, matchedId: null };
+    }
+    const incoming = extractShingles(text);
+    const signatures = getStoredSignatures();
+    let maxSim = 0.0;
+    let matchedId = null;
+
+    for (const record of signatures) {
+        const existing = new Set(record.shingles);
+        const sim = jaccardSimilarity(incoming, existing);
+        if (sim > maxSim) {
+            maxSim = sim;
+            matchedId = record.id;
+            if (maxSim >= SIMILARITY_THRESHOLD) break;
+        }
+    }
+
+    return {
+        allowed: maxSim < SIMILARITY_THRESHOLD,
+        similarity: Math.round(maxSim * 10000) / 10000,
+        matchedId: matchedId
+    };
+}
+
+// ==========================================================================
+// 📦 CLIENT-SIDE SHARD BUFFER (LOCAL STORAGE)
+// ==========================================================================
+function getLocalBuffer() {
+    try {
+        const raw = localStorage.getItem("mushfiqur_dataset_buffer");
+        return raw ? JSON.parse(raw) : [];
+    } catch (e) {
+        return [];
+    }
+}
+
+function saveToLocalBuffer(record) {
+    const buffer = getLocalBuffer();
+    buffer.push(record);
+    localStorage.setItem("mushfiqur_dataset_buffer", JSON.stringify(buffer));
+    updateLocalStats();
+}
+
+function clearLocalBuffer() {
+    localStorage.removeItem("mushfiqur_dataset_buffer");
+    updateLocalStats();
+}
+
+function updateLocalStats() {
+    const buffer = getLocalBuffer();
+    const count = buffer.length;
+    const jsonStr = JSON.stringify(buffer);
+    const bytes = new Blob([jsonStr]).size;
+    const kb = (bytes / 1024).toFixed(1);
+    const mb = (bytes / (1024 * 1024)).toFixed(3);
+
+    bufferDisplay.textContent = `${kb} KB / 1024 MB (${((bytes / (1024 * 1024 * 1024)) * 100).toFixed(2)}%)`;
+    pushStatusPill.textContent = `LOCAL SHARDS: ${count}`;
+
+    if (count === 0) {
+        shardsList.innerHTML = `<div class="shard-item empty">Zero setup required. Your submissions are preserved locally and pushed directly to GitHub.</div>`;
+    } else {
+        shardsList.innerHTML = buffer.slice(-5).reverse().map((rec, i) => `
+            <div class="shard-card">
+                <span class="shard-tag">${escapeHtml(rec.domain.toUpperCase())}</span>
+                <span class="shard-title">${escapeHtml(rec.prompt.substring(0, 45))}...</span>
+                <span class="shard-tokens">~${Math.round((rec.response.length / 4) * 1.35)} tok</span>
+            </div>
+        `).join("");
+    }
+}
+
+// GitHub Config Management
+function getGhConfig() {
+    try {
+        const raw = localStorage.getItem("mushfiqur_gh_config");
+        return raw ? JSON.parse(raw) : { username: "MD-Mushfiqur123", repo: "Dataset", token: "" };
+    } catch (e) {
+        return { username: "MD-Mushfiqur123", repo: "Dataset", token: "" };
+    }
+}
+
+function saveGhConfigLocal(username, repo, token) {
+    localStorage.setItem("mushfiqur_gh_config", JSON.stringify({ username, repo, token }));
+    applyGhConfigUI();
+}
+
+function applyGhConfigUI() {
+    const cfg = getGhConfig();
+    if (ghUser) ghUser.textContent = cfg.username || "MD-Mushfiqur123";
+    if (ghRepoName) ghRepoName.textContent = cfg.repo || "Dataset";
+    if (targetRepoLink) targetRepoLink.href = `https://github.com/${cfg.username || "MD-Mushfiqur123"}/${cfg.repo || "Dataset"}`;
+}
+
+// ==========================================================================
+// 🚀 INITIALIZE APPLICATION
+// ==========================================================================
+document.addEventListener("DOMContentLoaded", () => {
+    applyGhConfigUI();
+    loadDomains();
+    setupEventListeners();
+    updateLocalStats();
+
+    if (!isLocalServer && autodetectBanner) {
+        autodetectBanner.style.display = "none"; // Hide CLI autodetect on static web
+    }
+});
+
+async function loadDomains() {
+    if (isLocalServer) {
+        try {
+            const res = await fetch("/api/domains");
+            if (res.ok) domainsData = await res.json();
+        } catch (e) {
+            console.log("Using static default domains fallback.");
+        }
+    } else {
+        try {
+            const res = await fetch("./domains.json");
+            if (res.ok) domainsData = await res.json();
+        } catch (e) {
+            domainsData = DEFAULT_DOMAINS;
+        }
+    }
+    updateDomainView(currentDomain);
+}
+
 function updateDomainView(domainKey) {
     currentDomain = domainKey;
     document.body.dataset.activeDomain = domainKey;
-    const dom = domainsData[domainKey];
+    const dom = domainsData[domainKey] || DEFAULT_DOMAINS[domainKey];
     if (!dom) return;
 
     activeDomainHeading.textContent = `${dom.name.toUpperCase()} // MASTER META-PROMPT`;
@@ -119,110 +354,8 @@ function updateDomainView(domainKey) {
     });
 }
 
-// Event Listeners
-function setupEventListeners() {
-    // Domain tabs
-    document.querySelectorAll(".domain-tab").forEach(tab => {
-        tab.addEventListener("click", () => {
-            updateDomainView(tab.dataset.domain);
-        });
-    });
-
-    // Copy Prompt Button
-    btnCopyPrompt.addEventListener("click", () => {
-        const text = masterPromptBox.textContent;
-        navigator.clipboard.writeText(text).then(() => {
-            copyBtnText.textContent = "COPIED!";
-            showToast("Master Prompt copied to clipboard!");
-            setTimeout(() => {
-                copyBtnText.textContent = "COPY";
-            }, 2000);
-        });
-    });
-
-    // Mode toggles (smart vs manual vs transcript)
-    document.querySelectorAll(".mode-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            document.querySelectorAll(".mode-btn").forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-            currentMode = btn.dataset.mode;
-
-            if (currentMode === "smart") {
-                smartFieldsGroup.style.display = "block";
-                manualFieldsGroup.style.display = "none";
-                transcriptGroup.style.display = "none";
-            } else if (currentMode === "manual") {
-                smartFieldsGroup.style.display = "none";
-                manualFieldsGroup.style.display = "block";
-                transcriptGroup.style.display = "none";
-            } else {
-                smartFieldsGroup.style.display = "none";
-                manualFieldsGroup.style.display = "none";
-                transcriptGroup.style.display = "block";
-            }
-            updateMetrics();
-            triggerDuplicateRadarCheck();
-        });
-    });
-
-    // ⚡ 1-PASTE AUTO-SPLIT LISTENER (The Core Feature!)
-    inputRawPaste.addEventListener("input", handleRawPasteAutoSplit);
-    inputRawPaste.addEventListener("paste", () => {
-        setTimeout(handleRawPasteAutoSplit, 50);
-    });
-
-    // Sub-field editing listeners in Smart mode
-    [splitPrompt, splitReasoning, splitResponse].forEach(el => {
-        el.addEventListener("input", () => {
-            updateSmartCounts();
-            updateMetrics();
-            triggerDuplicateRadarCheck();
-        });
-    });
-
-    // Manual field listeners
-    [inputPrompt, inputReasoning, inputResponse, inputTranscript].forEach(el => {
-        el.addEventListener("input", () => {
-            updateMetrics();
-            triggerDuplicateRadarCheck();
-        });
-    });
-
-    // Submit Record Button
-    btnSubmit.addEventListener("click", submitRecord);
-
-    // Force Push Button
-    btnForcePush.addEventListener("click", forcePush);
-
-    // Clear Button
-    btnClear.addEventListener("click", clearForm);
-
-    // GitHub Modal open / close / save / autodetect
-    btnOpenGhModal.addEventListener("click", openGhModal);
-    btnCloseGhModal.addEventListener("click", closeGhModal);
-    btnCancelGhModal.addEventListener("click", closeGhModal);
-    btnSaveGhConfig.addEventListener("click", saveGhConfig);
-    btnAutoDetectGh.addEventListener("click", autoDetectGh);
-
-    // Live target URL preview update
-    [ghUsernameInput, ghRepoInput].forEach(inp => {
-        inp.addEventListener("input", updateModalUrlPreview);
-    });
-
-    // Close modal on escape or backdrop click
-    ghModal.addEventListener("click", (e) => {
-        if (e.target === ghModal) closeGhModal();
-    });
-    document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && !ghModal.classList.contains("hidden")) {
-            closeGhModal();
-        }
-    });
-}
-
 // ==========================================================================
 // 🧠 INTELLIGENT AUTO-SPLITTER ALGORITHM
-// User khali paste korbe, algorithm nijei vag korbe!
 // ==========================================================================
 function parseRawAIText(rawText) {
     rawText = (rawText || "").trim();
@@ -247,7 +380,6 @@ function parseRawAIText(rawText) {
         if (unclosedMatch) {
             prompt = rawText.substring(0, unclosedMatch.index).trim();
             const rest = unclosedMatch[1].trim();
-            // Look for common solution separator headers
             const solHeaderRegex = /(?:\n\s*|\A)(?:#{1,3}\s*)?(?:Solution|সমাধান|চূড়ান্ত সমাধান|Final Answer|Answer|উত্তর)(?::|\n)([\s\S]*)/i;
             const solMatch = rest.match(solHeaderRegex);
             if (solMatch) {
@@ -278,7 +410,6 @@ function parseRawAIText(rawText) {
         }
     }
 
-    // If prompt is still blank, extract leading Question/Problem header from response if any
     if (!prompt) {
         const qHeader = response.match(/^(?:(?:Problem|Question|প্রশ্ন|সমস্যা)\s*[:\-\d\.]*\s*)([\s\S]*?)(?=\n\n|\n[A-Z0-9#])/i);
         if (qHeader) {
@@ -292,7 +423,6 @@ function parseRawAIText(rawText) {
     return { prompt, reasoning, response };
 }
 
-// Triggered on paste/input in 1-Paste box
 function handleRawPasteAutoSplit() {
     const raw = inputRawPaste.value.trim();
     if (!raw) {
@@ -311,7 +441,6 @@ function handleRawPasteAutoSplit() {
     splitReasoning.value = reasoning;
     splitResponse.value = response;
 
-    // Mirror to manual boxes in case user switches tabs
     inputPrompt.value = prompt;
     inputReasoning.value = reasoning;
     inputResponse.value = response;
@@ -333,15 +462,11 @@ function updateSmartCounts() {
     splitResponseCount.textContent = `${countWords(splitResponse.value)} words`;
 }
 
-// Calculate Metrics (Tokens, Words)
 function updateMetrics() {
     let totalWords = 0;
 
     if (currentMode === "smart") {
-        const pWords = countWords(splitPrompt.value);
-        const rWords = countWords(splitReasoning.value);
-        const sWords = countWords(splitResponse.value);
-        totalWords = pWords + rWords + sWords;
+        totalWords = countWords(splitPrompt.value) + countWords(splitReasoning.value) + countWords(splitResponse.value);
     } else if (currentMode === "manual") {
         const thinkWords = countWords(inputReasoning.value);
         const respWords = countWords(inputResponse.value);
@@ -364,12 +489,11 @@ function countWords(str) {
     return str.trim().split(/\s+/).length;
 }
 
-// Trigger Debounced 83% Duplicate Check
+// 83% Duplicate Radar Check
 function triggerDuplicateRadarCheck() {
     clearTimeout(duplicateDebounceTimer);
     duplicateDebounceTimer = setTimeout(async () => {
         let textToCheck = "";
-
         if (currentMode === "smart") {
             textToCheck = `${splitPrompt.value} ${splitResponse.value}`.trim();
         } else if (currentMode === "manual") {
@@ -386,35 +510,49 @@ function triggerDuplicateRadarCheck() {
             return;
         }
 
-        try {
-            const res = await fetch("/api/check_similarity", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ text: textToCheck })
-            });
-            const data = await res.json();
-            
-            const simPct = (data.similarity * 100).toFixed(1);
-            const uniqPct = (100 - simPct).toFixed(1);
-
-            if (data.allowed) {
-                radarBadge.className = "radar-badge safe";
-                radarText.textContent = `UNIQUENESS: ${uniqPct}% (SAFE)`;
-                gatekeeperStatus.innerHTML = `GATEKEEPER: <strong class="text-safe">PASS (&lt;83%)</strong>`;
-                btnSubmit.disabled = false;
-            } else {
-                radarBadge.className = "radar-badge declined";
-                radarText.textContent = `SIMILARITY: ${simPct}% (DECLINED: ≥83%)`;
-                gatekeeperStatus.innerHTML = `GATEKEEPER: <strong class="text-declined">DECLINED (≥83% MATCH)</strong>`;
-                btnSubmit.disabled = true;
+        if (isLocalServer) {
+            try {
+                const res = await fetch("/api/check_similarity", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ text: textToCheck })
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    renderRadarResult(data.allowed, data.similarity);
+                    return;
+                }
+            } catch (e) {
+                // fallback to client check
             }
-        } catch (e) {
-            console.error("Duplicate check error", e);
         }
-    }, 350);
+
+        // Static Client-side Check
+        const clientResult = checkClientSimilarity(textToCheck);
+        renderRadarResult(clientResult.allowed, clientResult.similarity);
+    }, 300);
 }
 
-// Submit Record
+function renderRadarResult(allowed, similarity) {
+    const simPct = (similarity * 100).toFixed(1);
+    const uniqPct = (100 - simPct).toFixed(1);
+
+    if (allowed) {
+        radarBadge.className = "radar-badge safe";
+        radarText.textContent = `UNIQUENESS: ${uniqPct}% (SAFE)`;
+        gatekeeperStatus.innerHTML = `GATEKEEPER: <strong class="text-safe">PASS (&lt;83%)</strong>`;
+        btnSubmit.disabled = false;
+    } else {
+        radarBadge.className = "radar-badge declined";
+        radarText.textContent = `SIMILARITY: ${simPct}% (DECLINED: ≥83%)`;
+        gatekeeperStatus.innerHTML = `GATEKEEPER: <strong class="text-declined">DECLINED (≥83% MATCH)</strong>`;
+        btnSubmit.disabled = true;
+    }
+}
+
+// ==========================================================================
+// 💾 SUBMISSION & EXPORT ENGINE
+// ==========================================================================
 async function submitRecord() {
     let payload = {};
 
@@ -431,6 +569,8 @@ async function submitRecord() {
         }
 
         payload = {
+            id: `mushfiqur_${currentDomain}_${Date.now()}`,
+            timestamp: new Date().toISOString(),
             domain: currentDomain,
             mode: "smart_cot",
             prompt: prompt || `সমস্যা (${currentDomain})`,
@@ -450,6 +590,8 @@ async function submitRecord() {
         }
 
         payload = {
+            id: `mushfiqur_${currentDomain}_${Date.now()}`,
+            timestamp: new Date().toISOString(),
             domain: currentDomain,
             mode: "manual_cot",
             prompt: prompt,
@@ -464,6 +606,8 @@ async function submitRecord() {
             return;
         }
         payload = {
+            id: `mushfiqur_${currentDomain}_${Date.now()}`,
+            timestamp: new Date().toISOString(),
             domain: currentDomain,
             mode: "transcript",
             prompt: `Transcribed educational content for ${currentDomain}`,
@@ -475,127 +619,178 @@ async function submitRecord() {
     btnSubmit.disabled = true;
     btnSubmit.innerHTML = `<span class="radar-dot"></span> SAVING...`;
 
-    try {
-        const res = await fetch("/api/submit", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-        });
-        const result = await res.json();
-
-        if (result.success) {
-            showToast(result.message || "Record successfully validated and buffered!");
-            clearForm();
-            fetchStats();
-        } else {
-            showToast(`Submission rejected: ${result.message}`);
+    // 1. Try local server if available
+    if (isLocalServer) {
+        try {
+            const res = await fetch("/api/submit", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+            if (res.ok) {
+                const result = await res.json();
+                showToast(result.message || "Record successfully validated and buffered!");
+                saveSignature(payload.id, `${payload.prompt} ${payload.response}`, payload.domain);
+                clearForm();
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> SUBMIT RECORD`;
+                return;
+            }
+        } catch (e) {
+            console.log("Local server unavailable, saving to client buffer.");
         }
-    } catch (e) {
-        showToast("Error submitting record!");
-    } finally {
-        btnSubmit.disabled = false;
-        btnSubmit.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> SUBMIT RECORD`;
     }
+
+    // 2. Client-side storage (GitHub Pages mode)
+    saveToLocalBuffer(payload);
+    saveSignature(payload.id, `${payload.prompt} ${payload.response}`, payload.domain);
+
+    showToast("✓ Record validated & buffered locally! Ready to push or export.");
+    clearForm();
+
+    btnSubmit.disabled = false;
+    btnSubmit.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> SUBMIT RECORD`;
 }
 
-// Force GitHub Push Now
+// Export Local Shard as .jsonl file
+function exportLocalShard() {
+    const buffer = getLocalBuffer();
+    if (buffer.length === 0) {
+        showToast("No submissions in buffer to export yet! Add some records first.");
+        return;
+    }
+    const jsonlContent = buffer.map(rec => JSON.stringify(rec)).join("\n");
+    const blob = new Blob([jsonlContent], { type: "application/x-ndjson;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const dateStr = new Date().toISOString().replace(/[:\-]|\.\d{3}/g, "").slice(0, 15);
+    a.href = url;
+    a.download = `mushfiqur_${currentDomain}_shard_${dateStr}.jsonl`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast(`Exported ${buffer.length} records as .jsonl!`);
+}
+
+// Push to GitHub
 async function forcePush() {
+    const buffer = getLocalBuffer();
+    if (buffer.length === 0 && !isLocalServer) {
+        showToast("Buffer is currently empty. Submit records first!");
+        return;
+    }
+
     btnForcePush.disabled = true;
     btnForcePush.textContent = "PUSHING...";
 
+    if (isLocalServer) {
+        try {
+            const res = await fetch("/api/sync", { method: "POST" });
+            const result = await res.json();
+            showToast(result.message);
+        } catch (e) {
+            showToast("Local sync failed!");
+        } finally {
+            btnForcePush.disabled = false;
+            btnForcePush.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> PUSH NOW`;
+        }
+        return;
+    }
+
+    // Client GitHub Push via REST API
+    const cfg = getGhConfig();
+    if (!cfg.token) {
+        // Offer Community Issue Submission or PAT entry
+        showToast("Token missing! Connecting via GitHub Community Issue...");
+        submitViaGitHubIssue(buffer);
+        btnForcePush.disabled = false;
+        btnForcePush.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> PUSH NOW`;
+        return;
+    }
+
     try {
-        const res = await fetch("/api/sync", { method: "POST" });
-        const result = await res.json();
-        showToast(result.message);
-        fetchStats();
+        const dateStr = new Date().toISOString().replace(/[:\-]|\.\d{3}/g, "").slice(0, 15);
+        const filename = `shards/mushfiqur_${currentDomain}_shard_${dateStr}.jsonl`;
+        const content = buffer.map(r => JSON.stringify(r)).join("\n");
+        const b64Content = btoa(unescape(encodeURIComponent(content)));
+
+        const url = `https://api.github.com/repos/${cfg.username}/${cfg.repo}/contents/${filename}`;
+        const res = await fetch(url, {
+            method: "PUT",
+            headers: {
+                "Authorization": `Bearer ${cfg.token}`,
+                "Content-Type": "application/json",
+                "Accept": "application/vnd.github.v3+json"
+            },
+            body: JSON.stringify({
+                message: `feat(dataset): add ${buffer.length} verified ${currentDomain} CoT records [distilled]`,
+                content: b64Content
+            })
+        });
+
+        if (res.ok) {
+            showToast(`✓ Successfully pushed ${buffer.length} records to ${cfg.username}/${cfg.repo}!`);
+            clearLocalBuffer();
+        } else {
+            const err = await res.json();
+            showToast(`GitHub Error: ${err.message || "Failed to commit"}`);
+            // Fallback to Issue
+            submitViaGitHubIssue(buffer);
+        }
     } catch (e) {
-        showToast("Sync request failed!");
+        showToast("Network error pushing to GitHub API");
     } finally {
         btnForcePush.disabled = false;
         btnForcePush.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> PUSH NOW`;
     }
 }
 
-// Fetch Stats from Backend
-async function fetchStats() {
-    try {
-        const res = await fetch("/api/stats");
-        const stats = await res.json();
+// 1-Click Community Issue Submission (Zero Token Required)
+function submitViaGitHubIssue(buffer) {
+    if (!buffer || buffer.length === 0) return;
+    const title = encodeURIComponent(`[Dataset Submission] ${currentDomain.toUpperCase()} (${buffer.length} records)`);
+    const sample = buffer[0];
+    const bodyContent = `### 🧬 Community Dataset Submission (${currentDomain.toUpperCase()})
+**Records in batch:** ${buffer.length}
+**Contributor:** Web Studio User
+**Timestamp:** ${new Date().toISOString()}
 
-        // Update telemetry pills
-        bufferDisplay.textContent = `${stats.buffer_mb} MB / ${stats.max_mb} MB (${stats.buffer_percent}%)`;
-        pushStatusPill.textContent = `UNPUSHED: ${stats.unpushed_count} / 5`;
-        diskFreedTotal.textContent = `DISK FREED VIA PRUNING: ${stats.total_disk_freed_mb} MB`;
+\`\`\`json
+${JSON.stringify(buffer, null, 2)}
+\`\`\`
 
-        if (stats.github_username) {
-            ghUser.textContent = stats.github_username;
-            targetRepoLink.href = `https://github.com/${stats.github_username}/${stats.github_repo || "Dataset"}`;
-        }
+*(Automatically formatted by Mushfiqur Dataset Forge)*`;
 
-        // Render recent shards if any (XSS-safe via escapeHtml)
-        if (stats.recent_shards && stats.recent_shards.length > 0) {
-            shardsList.innerHTML = stats.recent_shards.map(s => `
-                <div class="shard-item">
-                    📦 ${escapeHtml(s.shard)} (${escapeHtml(s.samples)} samples, ~${escapeHtml(s.tokens)} tokens, ${escapeHtml(s.size_kb)} KB)
-                </div>
-            `).join("");
-        } else {
-            shardsList.innerHTML = `<div class="shard-item empty">Local buffer pruned after successful GitHub push. Zero disk space wasted.</div>`;
-        }
-    } catch (e) {
-        // quiet
-    }
+    const issueUrl = `https://github.com/MD-Mushfiqur123/dataset-collector/issues/new?title=${title}&body=${encodeURIComponent(bodyContent)}&labels=dataset-submission,bengali-reasoning`;
+    window.open(issueUrl, "_blank");
 }
 
-// Clear Form
 function clearForm() {
     inputRawPaste.value = "";
     splitPrompt.value = "";
     splitReasoning.value = "";
     splitResponse.value = "";
     splitStatusText.textContent = "Awaiting paste...";
-    updateSmartCounts();
 
     inputPrompt.value = "";
     inputReasoning.value = "";
     inputResponse.value = "";
     inputTranscript.value = "";
 
+    updateSmartCounts();
     updateMetrics();
-    radarBadge.className = "radar-badge pristine";
-    radarText.textContent = "UNIQUENESS: 100% (PRISTINE)";
-    gatekeeperStatus.innerHTML = `GATEKEEPER: <strong class="text-safe">PASS (&lt;83%)</strong>`;
-    btnSubmit.disabled = false;
+    triggerDuplicateRadarCheck();
 }
 
-// Show Toast
-function showToast(msg) {
-    toast.textContent = msg;
-    toast.classList.remove("hidden");
-    setTimeout(() => {
-        toast.classList.add("hidden");
-    }, 3500);
-}
-
-// GitHub Connection Modal Functions
-async function openGhModal() {
-    try {
-        const res = await fetch("/api/github_config");
-        const config = await res.json();
-        ghUsernameInput.value = config.username || "";
-        ghRepoInput.value = config.repo || "Dataset";
-        if (config.has_token) {
-            ghTokenInput.placeholder = "•••••••••••• (Active Token Configured)";
-        } else {
-            ghTokenInput.placeholder = "ghp_xxxxxxxxxxxx (Optional if 'gh auth login' is done)";
-        }
-        ghTokenInput.value = "";
-        updateModalUrlPreview();
-    } catch (e) {
-        console.error("Failed to load GitHub config", e);
-    }
+// GitHub Modal
+function openGhModal() {
+    const cfg = getGhConfig();
+    ghUsernameInput.value = cfg.username || "MD-Mushfiqur123";
+    ghRepoInput.value = cfg.repo || "Dataset";
+    ghTokenInput.value = cfg.token || "";
+    updateModalUrlPreview();
     ghModal.classList.remove("hidden");
-    ghUsernameInput.focus();
 }
 
 function closeGhModal() {
@@ -603,77 +798,129 @@ function closeGhModal() {
 }
 
 function updateModalUrlPreview() {
-    const u = ghUsernameInput.value.trim() || "<username>";
+    const u = ghUsernameInput.value.trim() || "MD-Mushfiqur123";
     const r = ghRepoInput.value.trim() || "Dataset";
     modalTargetUrl.textContent = `https://github.com/${u}/${r}`;
 }
 
-async function saveGhConfig() {
-    const username = ghUsernameInput.value.trim();
+function saveGhConfig() {
+    const username = ghUsernameInput.value.trim() || "MD-Mushfiqur123";
     const repo = ghRepoInput.value.trim() || "Dataset";
     const token = ghTokenInput.value.trim();
 
-    if (!username) {
-        showToast("Please enter a valid GitHub username!");
-        ghUsernameInput.focus();
+    saveGhConfigLocal(username, repo, token);
+    closeGhModal();
+    showToast(`Target set to https://github.com/${username}/${repo}`);
+}
+
+async function autoDetectGh() {
+    if (!isLocalServer) {
+        showToast("Auto-detect is available when running local server via Python.");
         return;
     }
-
-    btnSaveGhConfig.disabled = true;
-    btnSaveGhConfig.innerHTML = `<span class="radar-dot"></span> SAVING...`;
-
     try {
-        const res = await fetch("/api/github_config", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, repo, token })
-        });
-        const result = await res.json();
-
-        if (result.success) {
-            showToast(`Connected to github.com/${username}/${repo}`);
-            ghUser.textContent = username;
-            targetRepoLink.href = `https://github.com/${username}/${repo}`;
-            closeGhModal();
-            fetchStats();
-        } else {
-            showToast(`Failed: ${result.message || "Invalid configuration"}`);
+        const res = await fetch("/api/github_autodetect", { method: "POST" });
+        const data = await res.json();
+        if (data.success) {
+            ghUsernameInput.value = data.username;
+            ghRepoInput.value = data.repo || "Dataset";
+            updateModalUrlPreview();
+            showToast(`Auto-detected from local CLI: @${data.username}`);
         }
     } catch (e) {
-        showToast("Error updating GitHub config!");
-    } finally {
-        btnSaveGhConfig.disabled = false;
-        btnSaveGhConfig.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> SAVE & CONNECT`;
+        showToast("Could not auto-detect CLI account.");
     }
 }
 
-// 1-Click Auto-Detect via Local gh CLI
-async function autoDetectGh() {
-    btnAutoDetectGh.disabled = true;
-    btnAutoDetectGh.innerHTML = `<span class="radar-dot"></span> DETECTING...`;
+// Helpers
+function escapeHtml(str) {
+    if (str === null || str === undefined) return "";
+    return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
 
-    try {
-        const res = await fetch("/api/github_autodetect", { method: "POST" });
-        const result = await res.json();
+function showToast(msg) {
+    if (!toast) return;
+    toast.textContent = msg;
+    toast.classList.remove("hidden");
+    toast.classList.add("show");
+    setTimeout(() => {
+        toast.classList.remove("show");
+        setTimeout(() => toast.classList.add("hidden"), 300);
+    }, 3500);
+}
 
-        if (result.success) {
-            showToast(`Connected via CLI: @${result.username}/${result.repo || "Dataset"}`);
-            ghUsernameInput.value = result.username;
-            ghRepoInput.value = result.repo || "Dataset";
-            ghUser.textContent = result.username;
-            targetRepoLink.href = `https://github.com/${result.username}/${result.repo || "Dataset"}`;
-            updateModalUrlPreview();
-            setTimeout(() => {
-                closeGhModal();
-                fetchStats();
-            }, 500);
-        } else {
-            showToast(result.message || "Could not auto-detect. Please enter manually.");
-        }
-    } catch (e) {
-        showToast("Auto-detect failed. Please enter username manually.");
-    } finally {
-        btnAutoDetectGh.disabled = false;
-        btnAutoDetectGh.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg> AUTO-DETECT FROM CLI`;
-    }
+// Setup Event Listeners
+function setupEventListeners() {
+    document.querySelectorAll(".domain-tab").forEach(tab => {
+        tab.addEventListener("click", () => updateDomainView(tab.dataset.domain));
+    });
+
+    btnCopyPrompt.addEventListener("click", () => {
+        const text = masterPromptBox.textContent;
+        navigator.clipboard.writeText(text).then(() => {
+            copyBtnText.textContent = "COPIED!";
+            showToast("Master Prompt copied to clipboard!");
+            setTimeout(() => { copyBtnText.textContent = "COPY"; }, 2000);
+        });
+    });
+
+    document.querySelectorAll(".mode-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            document.querySelectorAll(".mode-btn").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            currentMode = btn.dataset.mode;
+
+            smartFieldsGroup.style.display = currentMode === "smart" ? "block" : "none";
+            manualFieldsGroup.style.display = currentMode === "manual" ? "block" : "none";
+            transcriptGroup.style.display = currentMode === "transcript" ? "block" : "none";
+
+            updateMetrics();
+            triggerDuplicateRadarCheck();
+        });
+    });
+
+    inputRawPaste.addEventListener("input", handleRawPasteAutoSplit);
+    inputRawPaste.addEventListener("paste", () => setTimeout(handleRawPasteAutoSplit, 50));
+
+    [splitPrompt, splitReasoning, splitResponse].forEach(el => {
+        el.addEventListener("input", () => {
+            updateSmartCounts();
+            updateMetrics();
+            triggerDuplicateRadarCheck();
+        });
+    });
+
+    [inputPrompt, inputReasoning, inputResponse, inputTranscript].forEach(el => {
+        el.addEventListener("input", () => {
+            updateMetrics();
+            triggerDuplicateRadarCheck();
+        });
+    });
+
+    btnSubmit.addEventListener("click", submitRecord);
+    btnForcePush.addEventListener("click", forcePush);
+    btnExportShard.addEventListener("click", exportLocalShard);
+    btnClear.addEventListener("click", clearForm);
+
+    btnOpenGhModal.addEventListener("click", openGhModal);
+    btnCloseGhModal.addEventListener("click", closeGhModal);
+    btnCancelGhModal.addEventListener("click", closeGhModal);
+    btnSaveGhConfig.addEventListener("click", saveGhConfig);
+    btnAutoDetectGh.addEventListener("click", autoDetectGh);
+
+    [ghUsernameInput, ghRepoInput].forEach(inp => {
+        inp.addEventListener("input", updateModalUrlPreview);
+    });
+
+    ghModal.addEventListener("click", (e) => {
+        if (e.target === ghModal) closeGhModal();
+    });
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && !ghModal.classList.contains("hidden")) closeGhModal();
+    });
 }

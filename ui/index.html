@@ -3,11 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DATASET FORGE // SWISS MINIMAL</title>
+    <title>MUSHFIQUR DATASET FORGE // SWISS MINIMAL</title>
+    
+    <!-- Meta / SEO / OpenGraph -->
+    <meta name="description" content="Swiss Minimalist Distributed Scientific Dataset Ingestion & Distillation Engine for Bengali Reasoning AI. Built by Md. Mushfiqur Rahim & L.">
+    <meta property="og:title" content="MUSHFIQUR DATASET FORGE // DISTRIBUTED SCIENTIFIC COLLECTIVE">
+    <meta property="og:description" content="1-Paste Intelligent Auto-Split, 83% Duplicate Decline Gatekeeper, 4 Core Scientific Domains. Zero setup, runs 100% in your browser.">
+    <meta property="og:url" content="https://md-mushfiqur123.github.io/dataset-collector/">
+    <meta property="og:type" content="website">
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=1792116">
+    <link rel="stylesheet" href="./style.css?v=20261016">
 </head>
 <body>
     <div class="app-container">
@@ -24,17 +33,17 @@
             <div class="telemetry-cluster">
                 <div class="telemetry-pill">
                     <span class="pill-label">REPO:</span>
-                    <a id="targetRepoLink" href="#" target="_blank" class="pill-value">github.com/<span id="ghUser">MD-Mushfiqur123</span>/Dataset</a>
+                    <a id="targetRepoLink" href="https://github.com/MD-Mushfiqur123/Dataset" target="_blank" class="pill-value">github.com/<span id="ghUser">MD-Mushfiqur123</span>/<span id="ghRepoName">Dataset</span></a>
                 </div>
 
                 <div class="telemetry-pill">
                     <span class="pill-label">BUFFER:</span>
-                    <span id="bufferDisplay" class="pill-value">0.0 MB / 1024 MB (0%)</span>
+                    <span id="bufferDisplay" class="pill-value">0.0 KB / 1024 MB (0%)</span>
                 </div>
 
                 <div class="telemetry-pill">
                     <span class="pill-label">STATUS:</span>
-                    <span id="pushStatusPill" class="pill-value">UNPUSHED: 0 / 5</span>
+                    <span id="pushStatusPill" class="pill-value">LOCAL SHARDS: 0</span>
                 </div>
 
                 <button id="btnOpenGhModal" class="swiss-btn-outline" title="Connect your own GitHub account & repository">
@@ -42,7 +51,12 @@
                     CONNECT GITHUB
                 </button>
 
-                <button id="btnForcePush" class="swiss-btn-compact" title="Flush buffer directly to GitHub">
+                <button id="btnExportShard" class="swiss-btn-compact" title="Download accumulated shard as .jsonl">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    EXPORT SHARD
+                </button>
+
+                <button id="btnForcePush" class="swiss-btn-compact" title="Push buffer directly to GitHub">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
                     PUSH NOW
                 </button>
@@ -102,7 +116,7 @@
                     <pre id="masterPromptBox" class="prompt-text-content"></pre>
                 </div>
                 <div class="panel-footer">
-                    <span class="hint-text">প্রম্পটটি কপি করে DeepSeek বা ChatGPT-তে পেস্ট করে রিজনিং প্রস্তুত করুন।</span>
+                    <span class="hint-text">প্রম্পটটি কপি করে DeepSeek-R1 বা ChatGPT-তে পেস্ট করে বাংলা চেইন-অব-থট ও সমাধান প্রস্তুত করুন।</span>
                 </div>
             </div>
 
@@ -133,7 +147,7 @@
                     <div id="smartFieldsGroup">
                         <div class="form-group">
                             <div class="label-with-counter">
-                                <label class="form-label">
+                                <label class="form-label" for="inputRawPaste">
                                     PASTE FULL AI OUTPUT (এখানে পুরো টেক্সট পেস্ট করুন):
                                 </label>
                                 <span class="auto-badge">⚡ ALGORITHM WILL AUTO-SPLIT &lt;think&gt; &amp; SOLUTION</span>
@@ -179,13 +193,13 @@
                     <!-- Mode 2: 3-Box Manual (Optional fallback) -->
                     <div id="manualFieldsGroup" style="display: none;">
                         <div class="form-group">
-                            <label class="form-label">PROBLEM / PROMPT (প্রশ্ন বা সমস্যা):</label>
+                            <label class="form-label" for="inputPrompt">PROBLEM / PROMPT (প্রশ্ন বা সমস্যা):</label>
                             <textarea id="inputPrompt" class="swiss-textarea h-sm" placeholder="এখানে পদার্থবিজ্ঞান, রসায়ন, গণিত বা জীববিজ্ঞানের সমস্যাটি লিখুন..."></textarea>
                         </div>
 
                         <div class="form-group">
                             <div class="label-with-counter">
-                                <label class="form-label">&lt;think&gt; INTERNAL REASONING (অভ্যন্তরীণ চিন্তন প্রক্রিয়া):</label>
+                                <label class="form-label" for="inputReasoning">&lt;think&gt; INTERNAL REASONING (অভ্যন্তরীণ চিন্তন প্রক্রিয়া):</label>
                                 <span id="thinkWordCount" class="counter-text">0 words</span>
                             </div>
                             <textarea id="inputReasoning" class="swiss-textarea h-md mono" placeholder="<think> ট্যাগের ভেতরের সম্পূর্ণ বাংলা যুক্তি, ডেরিভেশন ও চিন্তা এখানে দিন..."></textarea>
@@ -193,7 +207,7 @@
 
                         <div class="form-group">
                             <div class="label-with-counter">
-                                <label class="form-label">FINAL SOLUTION / RESPONSE (চূড়ান্ত সমাধান ও আউটপুট):</label>
+                                <label class="form-label" for="inputResponse">FINAL SOLUTION / RESPONSE (চূড়ান্ত সমাধান ও আউটপুট):</label>
                                 <span id="responseWordCount" class="counter-text">0 words</span>
                             </div>
                             <textarea id="inputResponse" class="swiss-textarea h-md" placeholder="চূড়ান্ত প্রাতিষ্ঠানিক সমাধান ও নির্ভুল ফলাফল এখানে লিখুন..."></textarea>
@@ -203,7 +217,7 @@
                     <!-- Mode 3: Transcript Field -->
                     <div id="transcriptGroup" class="form-group" style="display: none;">
                         <div class="label-with-counter">
-                            <label class="form-label">INTERNET BANGLA TRANSCRIPT (ইউটিউব বা লেকচার ট্রান্সক্রিপ্ট):</label>
+                            <label class="form-label" for="inputTranscript">INTERNET BANGLA TRANSCRIPT (ইউটিউব বা লেকচার ট্রান্সক্রিপ্ট):</label>
                             <span id="transcriptWordCount" class="counter-text">0 words</span>
                         </div>
                         <textarea id="inputTranscript" class="swiss-textarea h-lg" placeholder="ইউটিউব ভিডিও বা বাংলা লেকচারের অডিও ট্রান্সক্রিপ্ট টেক্সট এখানে পেস্ট করুন..."></textarea>
@@ -235,10 +249,10 @@
         <footer class="shards-footer">
             <div class="footer-header">
                 <span class="footer-title">SHARD INVENTORY // BUFFER HEALTH</span>
-                <span id="diskFreedTotal" class="freed-text">DISK FREED VIA PRUNING: 0.0 MB</span>
+                <span id="diskFreedTotal" class="freed-text">DISTRIBUTED COLLECTIVE // REASONING BANK</span>
             </div>
             <div id="shardsList" class="shards-grid">
-                <div class="shard-item empty">Local buffer pruned after successful GitHub push. Zero disk space wasted.</div>
+                <div class="shard-item empty">Zero setup required. Your submissions are preserved locally and pushed directly to GitHub.</div>
             </div>
         </footer>
     </div>
@@ -257,14 +271,14 @@
             <div class="modal-body">
                 <p class="modal-desc">
                     যেকোনো ইউজার বা কন্ট্রিবিউটর তাদের নিজস্ব GitHub অ্যাকাউন্ট যুক্ত করতে পারবেন। 
-                    প্রতিটি ডিস্টিল্ড শার্ড স্বয়ংক্রিয়ভাবে আপনার <code>https://github.com/&lt;username&gt;/&lt;repo&gt;</code> তে পুশ হবে।
+                    প্রতিটি ডিস্টিল্ড শার্ড সরাসরি আপনার <code>https://github.com/&lt;username&gt;/&lt;repo&gt;</code> তে পুশ হবে।
                 </p>
 
                 <!-- 1-Click Auto-Detect Button -->
-                <div class="autodetect-banner">
+                <div class="autodetect-banner" id="autodetectBanner">
                     <div class="autodetect-info">
                         <strong>⚡ 1-CLICK INSTANT AUTH</strong>
-                        <span>লোকাল মেশিনের GitHub CLI থেকে ১ ক্লিকে অটো-ডিটেক্ট করুন:</span>
+                        <span>লোকাল মেশিনে থাকলে CLI থেকে ১ ক্লিকে অটো-ডিটেক্ট করুন:</span>
                     </div>
                     <button id="btnAutoDetectGh" class="swiss-btn-autodetect" type="button">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
@@ -272,11 +286,11 @@
                     </button>
                 </div>
 
-                <div class="modal-divider"><span>OR MANUAL REPO SETUP</span></div>
+                <div class="modal-divider"><span>OR REPO CONFIGURATION</span></div>
 
                 <div class="form-group">
                     <label class="form-label" for="ghUsernameInput">GITHUB USERNAME (বা অর্গানাইজেশন):</label>
-                    <input type="text" id="ghUsernameInput" class="swiss-input" placeholder="e.g. MD-Mushfiqur123 or contributor-user" autocomplete="off" spellcheck="false">
+                    <input type="text" id="ghUsernameInput" class="swiss-input" placeholder="e.g. MD-Mushfiqur123 or contributor-user" value="MD-Mushfiqur123" autocomplete="off" spellcheck="false">
                 </div>
 
                 <div class="form-group">
@@ -286,10 +300,10 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" for="ghTokenInput">PERSONAL ACCESS TOKEN (PAT) [ঐচ্ছিক / OPTIONAL]:</label>
-                    <input type="password" id="ghTokenInput" class="swiss-input mono" placeholder="ghp_xxxxxxxxxxxx (Optional if 'gh auth login' is done)" autocomplete="off">
+                    <label class="form-label" for="ghTokenInput">PERSONAL ACCESS TOKEN (PAT) [PUSH করার জন্য]:</label>
+                    <input type="password" id="ghTokenInput" class="swiss-input mono" placeholder="ghp_xxxxxxxxxxxx (Classic token with 'repo' scope)" autocomplete="off">
                     <span class="input-hint">
-                        যদি মেশিনে <code>gh auth login</code> বা SSH কী সেটআপ থাকে, তবে টোকেন খালি রাখলেও চলবে। রিমোট বা ক্লাউড ইউজারের জন্য Personal Access Token (classic with <code>repo</code> scope) দিন।
+                        GitHub ➔ Settings ➔ Developer Settings ➔ Personal Access Tokens (classic) থেকে <code>repo</code> পারমিশন সহ একটি টোকেন তৈরি করে এখানে দিন। এটি শুধুমাত্র আপনার ব্রাউজারের লোকালে সেভ থাকবে।
                     </span>
                 </div>
 
@@ -299,8 +313,8 @@
                         <span id="modalTargetUrl" class="info-val">https://github.com/MD-Mushfiqur123/Dataset</span>
                     </div>
                     <div class="info-row">
-                        <span class="info-label">LOCAL BUFFER:</span>
-                        <span class="info-val">5 Shards (1 GB) auto-commit & push with gzip compression</span>
+                        <span class="info-label">STORAGE FORMAT:</span>
+                        <span class="info-val">Gzip compressed JSONL shards with deduplication signatures</span>
                     </div>
                 </div>
             </div>
@@ -318,6 +332,6 @@
     <!-- Notification Toast -->
     <div id="toast" class="toast hidden"></div>
 
-    <script src="app.js?v=1792116"></script>
+    <script src="./app.js?v=20261016"></script>
 </body>
 </html>

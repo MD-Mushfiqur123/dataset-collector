@@ -1,6 +1,7 @@
 # 🇨🇭 MUSHFIQUR DATASET FORGE // SWISS MINIMAL
 ### Autonomous Sovereign Scientific Bengali Dataset Distillation & Ingestion Engine
 
+[![Live Web App](https://img.shields.io/badge/Live%20Website-md--mushfiqur123.github.io%2Fdataset--collector-2563EB?style=for-the-badge&logo=github)](https://md-mushfiqur123.github.io/dataset-collector/)
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/MD-Mushfiqur123/dataset-collector)
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/MD-Mushfiqur123/dataset-collector/blob/main/colab_launcher.ipynb)
 [![Security Audit](https://img.shields.io/badge/Security%20Audit-6%2F6%20Pass%20(OWASP%20Top%2010)-22c55e?style=flat-square)](./WHITE_HAT_SECURITY_AUDIT.md)
@@ -16,13 +17,14 @@ Zero manual dependency installation, zero `pip install`, zero configuration. Pic
 
 | Method | Target Platform | How To Run |
 | :--- | :--- | :--- |
-| 🌐 **Browser Studio (0 Setup)** | Any device with a browser | Click **[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/MD-Mushfiqur123/dataset-collector)** |
+| 🚀 **Live Web App (0 Install)** | Any Browser / Phone / PC | Open **👉 [https://md-mushfiqur123.github.io/dataset-collector/](https://md-mushfiqur123.github.io/dataset-collector/)** |
+| 🌐 **Codespaces Cloud** | Cloud Container | Click **[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/MD-Mushfiqur123/dataset-collector)** |
 | 📱 **Google Colab (Cloud)** | Phone / Tablet / Low-spec PC | Click **[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/MD-Mushfiqur123/dataset-collector/blob/main/colab_launcher.ipynb)** and run cell |
 | 🪟 **Windows 1-Command** | PowerShell | `irm https://raw.githubusercontent.com/MD-Mushfiqur123/dataset-collector/main/install.ps1 \| iex` |
 | 🪟 **Windows Double-Click** | File Explorer | Double click **`run.bat`** |
 | 🐧 **Linux / macOS / WSL** | Terminal (Bash) | `curl -fsSL https://raw.githubusercontent.com/MD-Mushfiqur123/dataset-collector/main/install.sh \| bash` |
 
-> **Note:** All automated launchers automatically verify Python 3, start the server at `http://localhost:7860/`, and open your default browser.
+> **Note:** All automated launchers automatically verify Python 3, start the server at `http://localhost:7860/`, and open your default browser. Or visit the live GitHub Pages website directly!
 
 ---
 
