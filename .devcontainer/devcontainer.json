@@ -1,0 +1,19 @@
+{
+  "name": "Dataset Forge (Swiss Minimal)",
+  "image": "mcr.microsoft.com/devcontainers/python:3.11",
+  "forwardPorts": [7860],
+  "portsAttributes": {
+    "7860": {
+      "label": "Dataset Forge Studio",
+      "onAutoForward": "openBrowser"
+    }
+  },
+  "postStartCommand": "nohup python server.py > server.log 2>&1 &",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python"
+      }
+    }
+  }
+}

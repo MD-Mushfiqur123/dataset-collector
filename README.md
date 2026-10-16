@@ -1,6 +1,8 @@
 # 🇨🇭 MUSHFIQUR DATASET FORGE // SWISS MINIMAL
 ### Autonomous Sovereign Scientific Bengali Dataset Distillation & Ingestion Engine
 
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/MD-Mushfiqur123/dataset-collector)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/MD-Mushfiqur123/dataset-collector/blob/main/colab_launcher.ipynb)
 [![Security Audit](https://img.shields.io/badge/Security%20Audit-6%2F6%20Pass%20(OWASP%20Top%2010)-22c55e?style=flat-square)](./WHITE_HAT_SECURITY_AUDIT.md)
 [![Unit Tests](https://img.shields.io/badge/Unit%20Tests-11%2F11%20OK-blue?style=flat-square)](./tests/)
 [![Architecture](https://img.shields.io/badge/Design-Swiss%20Minimal%20Monochrome-black?style=flat-square)]()
@@ -8,21 +10,19 @@
 
 ---
 
-## ⚡ 1-Command Instant Download & Launch
+## ⚡ 1-Click & 1-Command Universal Launch (Anyone, Anywhere)
 
-No installation, no manual git clone, zero `pip install`. Paste **one command** in your terminal:
+Zero manual dependency installation, zero `pip install`, zero configuration. Pick your preferred method:
 
-### 🪟 Windows (PowerShell)
-```powershell
-irm https://raw.githubusercontent.com/MD-Mushfiqur123/dataset-collector/main/install.ps1 | iex
-```
+| Method | Target Platform | How To Run |
+| :--- | :--- | :--- |
+| 🌐 **Browser Studio (0 Setup)** | Any device with a browser | Click **[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/MD-Mushfiqur123/dataset-collector)** |
+| 📱 **Google Colab (Cloud)** | Phone / Tablet / Low-spec PC | Click **[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/MD-Mushfiqur123/dataset-collector/blob/main/colab_launcher.ipynb)** and run cell |
+| 🪟 **Windows 1-Command** | PowerShell | `irm https://raw.githubusercontent.com/MD-Mushfiqur123/dataset-collector/main/install.ps1 \| iex` |
+| 🪟 **Windows Double-Click** | File Explorer | Double click **`run.bat`** |
+| 🐧 **Linux / macOS / WSL** | Terminal (Bash) | `curl -fsSL https://raw.githubusercontent.com/MD-Mushfiqur123/dataset-collector/main/install.sh \| bash` |
 
-### 🐧 Linux / macOS / WSL (Bash)
-```bash
-curl -fsSL https://raw.githubusercontent.com/MD-Mushfiqur123/dataset-collector/main/install.sh | bash
-```
-
-> **Note:** Automatically checks Python 3, fetches the latest release, starts the server at `http://localhost:7860/`, and opens your browser.
+> **Note:** All automated launchers automatically verify Python 3, start the server at `http://localhost:7860/`, and open your default browser.
 
 ---
 
