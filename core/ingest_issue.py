@@ -169,8 +169,8 @@ def process_issue():
         run_cmd(f'gh issue close {issue_number} --reason "not planned"')
         return 0
 
-    # Save to local shards
-    shards_dir = PROJECT_ROOT / "data" / "shards"
+    # Save to local shards in dataset repo
+    shards_dir = PROJECT_ROOT / "shards"
     shards_dir.mkdir(parents=True, exist_ok=True)
     
     target_shard = shards_dir / f"{verified_records[0]['domain']}_verified.jsonl"
@@ -180,37 +180,12 @@ def process_issue():
 
     print(f"[SUCCESS] Appended {len(verified_records)} records to {target_shard.name}")
 
-    # Commit to dataset-collector repository
+    # Commit directly to MD-Mushfiqur123/dataset repository
     run_cmd('git config user.name "github-actions[bot]"')
     run_cmd('git config user.email "github-actions[bot]@users.noreply.github.com"')
-    run_cmd('git add data/')
+    run_cmd('git add shards/ core/')
     run_cmd(f'git commit -m "feat(dataset): ingest {len(verified_records)} verified records from issue #{issue_number} by @{author} [skip ci]"')
     run_cmd('git push')
-
-    # Optional cross-repo push to MD-Mushfiqur123/dataset if secret token provided
-    custom_token = os.environ.get("DATASET_PUSH_TOKEN")
-    if custom_token:
-        print("[SYNC] Pushing records to target MD-Mushfiqur123/dataset...")
-        try:
-            sync_dir = PROJECT_ROOT / "target_dataset_sync"
-            if sync_dir.exists():
-                import shutil
-                shutil.rmtree(sync_dir)
-            clone_url = f"https://x-access-token:{custom_token}@github.com/MD-Mushfiqur123/dataset.git"
-            ok, _, _ = run_cmd(f'git clone --depth 1 {clone_url} target_dataset_sync')
-            if ok:
-                target_file = sync_dir / f"community_{verified_records[0]['domain']}.jsonl"
-                with open(target_file, "a", encoding="utf-8") as f:
-                    for r in verified_records:
-                        f.write(json.dumps(r, ensure_ascii=False) + "\n")
-                run_cmd('git config user.name "Mushfiqur-Dataset-Bot"', cwd=str(sync_dir))
-                run_cmd('git config user.email "bot@mushfiqur.ai"', cwd=str(sync_dir))
-                run_cmd('git add .', cwd=str(sync_dir))
-                run_cmd(f'git commit -m "feat(community): add {len(verified_records)} records from @{author}"', cwd=str(sync_dir))
-                run_cmd('git push', cwd=str(sync_dir))
-                print("[SYNC] Successfully pushed to MD-Mushfiqur123/dataset!")
-        except Exception as e:
-            print(f"[SYNC ERROR] {e}")
 
     # Success comment on the issue and auto-close
     comment_body = (
@@ -219,10 +194,15 @@ def process_issue():
         f"- **Domain:** `{verified_records[0]['domain'].upper()}`\n"
         f"- **Verified Records Accepted:** `{len(verified_records)}`\n"
         f"- **Duplicates Rejected (< 83% gatekeeper):** `{rejected_count}`\n"
-        f"- **Committed into Official Shards:** `data/shards/{target_shard.name}`\n\n"
+        f"- **Committed into Official Shards:** `shards/{target_shard.name}`\n\n"
         f"✨ Your contribution is now part of the sovereign AI dataset."
     )
-    run_cmd(f'gh issue comment {issue_number} --body "{comment_body}"')
+    comment_file = PROJECT_ROOT / f"comment_{issue_number}.md"
+    with open(comment_file, "w", encoding="utf-8") as f:
+        f.write(comment_body)
+    run_cmd(f'gh issue comment {issue_number} --body-file "{comment_file}"')
+    if comment_file.exists():
+        comment_file.unlink()
     run_cmd(f'gh issue close {issue_number} --reason "completed"')
     run_cmd(f'gh issue edit {issue_number} --add-label "verified-dataset"')
 
