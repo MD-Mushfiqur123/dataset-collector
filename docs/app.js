@@ -702,7 +702,7 @@ async function forcePush() {
     const cfg = getGhConfig();
     if (!cfg.token) {
         // Offer Community Issue Submission or PAT entry
-        showToast("Token missing! Connecting via GitHub Community Issue...");
+        showToast("🚀 Zero-Token Ingestion: Opening automated GitHub submission...");
         submitViaGitHubIssue(buffer);
         btnForcePush.disabled = false;
         btnForcePush.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg> PUSH NOW`;
@@ -746,11 +746,10 @@ async function forcePush() {
     }
 }
 
-// 1-Click Community Issue Submission (Zero Token Required)
+// 1-Click Community Issue Submission (Zero Token Required, Processed by GitHub Actions Bot)
 function submitViaGitHubIssue(buffer) {
     if (!buffer || buffer.length === 0) return;
     const title = encodeURIComponent(`[Dataset Submission] ${currentDomain.toUpperCase()} (${buffer.length} records)`);
-    const sample = buffer[0];
     const bodyContent = `### 🧬 Community Dataset Submission (${currentDomain.toUpperCase()})
 **Records in batch:** ${buffer.length}
 **Contributor:** Web Studio User
@@ -760,7 +759,7 @@ function submitViaGitHubIssue(buffer) {
 ${JSON.stringify(buffer, null, 2)}
 \`\`\`
 
-*(Automatically formatted by Mushfiqur Dataset Forge)*`;
+*(🤖 Note: This submission will be automatically verified by Mushfiqur's GitHub Actions Bot. Valid unique records [<83% similarity] will be auto-merged into official shards and this issue will be closed automatically.)*`;
 
     const issueUrl = `https://github.com/MD-Mushfiqur123/dataset-collector/issues/new?title=${title}&body=${encodeURIComponent(bodyContent)}&labels=dataset-submission,bengali-reasoning`;
     window.open(issueUrl, "_blank");

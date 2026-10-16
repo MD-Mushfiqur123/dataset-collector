@@ -1,0 +1,38 @@
+name: Automated Dataset Ingestion Bot
+
+on:
+  issues:
+    types: [opened, edited]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  ingest:
+    # Only run if issue is tagged or titled as dataset submission
+    if: |
+      contains(github.event.issue.labels.*.name, 'dataset-submission') ||
+      contains(github.event.issue.title, '[Dataset Submission]') ||
+      contains(github.event.issue.body, 'Community Dataset Submission')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Ingest and Validate Dataset Submission
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DATASET_PUSH_TOKEN: ${{ secrets.DATASET_PUSH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python core/ingest_issue.py
