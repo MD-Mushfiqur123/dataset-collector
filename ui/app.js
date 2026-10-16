@@ -285,9 +285,9 @@ function updateLocalStats() {
 function getGhConfig() {
     try {
         const raw = localStorage.getItem("mushfiqur_gh_config");
-        return raw ? JSON.parse(raw) : { username: "MD-Mushfiqur123", repo: "dataset", token: "" };
+        return raw ? JSON.parse(raw) : { username: "MD-Mushfiqur123", repo: "scientific-reasoning-dataset", token: "" };
     } catch (e) {
-        return { username: "MD-Mushfiqur123", repo: "dataset", token: "" };
+        return { username: "MD-Mushfiqur123", repo: "scientific-reasoning-dataset", token: "" };
     }
 }
 
@@ -299,7 +299,7 @@ function saveGhConfigLocal(username, repo, token) {
 function applyGhConfigUI() {
     const cfg = getGhConfig();
     const user = cfg.username || "MD-Mushfiqur123";
-    const repo = (cfg.repo || "dataset").toLowerCase() === "dataset" ? "dataset" : cfg.repo;
+    const repo = cfg.repo || "scientific-reasoning-dataset";
     if (ghUser) ghUser.textContent = user;
     if (ghRepoName) ghRepoName.textContent = repo;
     if (targetRepoLink) targetRepoLink.href = `https://github.com/${user}/${repo}`;
