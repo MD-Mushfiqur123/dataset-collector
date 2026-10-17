@@ -187,6 +187,29 @@ body {
     border-color: var(--accent-physics);
 }
 
+.btn-export-compressed {
+    background: #0284C7;
+    border-color: #0284C7;
+    color: #FFFFFF;
+}
+
+.btn-export-compressed:hover {
+    background: #0369A1;
+    border-color: #0369A1;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+}
+
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+
 /* ==========================================================================
    Dual-Stage Rolling Storage Telemetry (S1 Uncomp & S2 Comp)
    ========================================================================== */

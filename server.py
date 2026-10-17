@@ -169,24 +169,29 @@ class CollectorHTTPHandler(BaseHTTPRequestHandler):
                 "repo": pusher.state.get("github_repo", "Dataset"),
                 "has_token": bool(pusher.state.get("github_token"))
             })
-        elif path == "/api/download_zip":
+        elif path in ["/api/download_zip", "/api/export_compressed"]:
             import zipfile
             import io
+            # ⚡ Step 1: Compress any active buffer records on the fly so everything is 100% compressed!
+            pusher.compress_buffer_to_shards()
+
             zip_buffer = io.BytesIO()
-            shards = list(pusher.shards_dir.glob("*.jsonl.gz"))
-            raw_buffers = list(pusher.buffer_dir.glob("*.jsonl"))
+            shards = sorted(list(pusher.shards_dir.glob("*.jsonl.gz")))
 
             with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zf:
-                for s in shards:
-                    zf.write(s, arcname=f"shards/{s.name}")
-                for b in raw_buffers:
-                    zf.write(b, arcname=f"buffer/{b.name}")
+                if shards:
+                    for s in shards:
+                        zf.write(s, arcname=f"shards/{s.name}")
+                else:
+                    readme_content = "MUSHFIQUR DATASET FORGE // COMPRESSED ARCHIVE\n\nNo records submitted yet. Add records and export again.\n".encode("utf-8")
+                    zf.writestr("README.txt", readme_content)
+
                 registry_file = PROJECT_DIR / "data" / "registry.json"
                 if registry_file.exists():
                     zf.write(registry_file, arcname="registry.json")
 
             zip_data = zip_buffer.getvalue()
-            filename = f"mushfiqur_scientific_dataset_{datetime.now().strftime('%Y%m%d_%H%M%S')}.zip"
+            filename = f"mushfiqur_scientific_dataset_compressed_{datetime.now().strftime('%Y%m%d_%H%M%S')}.zip"
             self.send_response(200)
             self.send_header("Content-Type", "application/zip")
             self.send_header("Content-Disposition", f'attachment; filename="{filename}"')

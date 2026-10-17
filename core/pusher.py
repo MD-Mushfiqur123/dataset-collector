@@ -89,6 +89,7 @@ class ShardPusher:
 
         curr_bytes = self.get_buffer_size()
         compressed_now = False
+        auto_trigger = (self.state["unpushed_count"] >= AUTO_PUSH_COUNT_THRESHOLD) or (curr_bytes >= MAX_BUFFER_BYTES)
 
         if curr_bytes >= MAX_BUFFER_BYTES:
             # S1 limit hit: immediately compress buffer to S2 and purge raw files locally!
@@ -101,8 +102,9 @@ class ShardPusher:
             "buffer_bytes": curr_bytes,
             "buffer_mb": round(curr_bytes / (1024 * 1024), 2),
             "max_mb": 1024.0,
+            "auto_trigger": auto_trigger,
             "compressed_now": compressed_now,
-            "trigger_reason": "s1_auto_compress" if compressed_now else None
+            "trigger_reason": "s1_auto_compress" if compressed_now else ("count_threshold" if auto_trigger else None)
         }
 
     def compress_buffer_to_shards(self) -> List[Path]:

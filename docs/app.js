@@ -871,14 +871,90 @@ async function triggerManualCompress() {
     }
 }
 
+// ==========================================================================
+// ⚡ UNIVERSAL ANY-STAGE COMPRESSED EXPORT ENGINE (.ZIP / .JSONL.GZ)
+// Works 100% offline at ANY stage (1 sample, 10 samples, or thousands!)
+// ==========================================================================
+async function exportCompressedData() {
+    const btns = [
+        document.getElementById("btnExportCompressed"),
+        document.getElementById("btnExportCompressedS1"),
+        document.getElementById("btnDownloadZipQuick"),
+        document.getElementById("btnDownloadMilestoneZip")
+    ].filter(Boolean);
+
+    btns.forEach(b => {
+        b.dataset.origHtml = b.innerHTML;
+        b.disabled = true;
+        b.innerHTML = `<svg class="spin" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle><path d="M12 2a10 10 0 0 1 10 10"></path></svg> COMPRESSING...`;
+    });
+
+    try {
+        if (isLocalServer) {
+            // Local Python Server Mode:
+            // Triggers on-the-fly compression of any active buffer, packages all .jsonl.gz into zip!
+            showToast("⚡ সংকুচিত জিপ প্রস্তুত হচ্ছে (বাফার কম্প্রেস + শার্ড প্যাকেজিং)...");
+            window.location.href = "/api/export_compressed";
+            setTimeout(async () => {
+                await fetchServerStats();
+                showToast("✓ ১-ক্লিক সংকুচিত জিপ (.zip) সফলভাবে ডাউনলোড শুরু হয়েছে!");
+            }, 800);
+            return;
+        }
+
+        // Client-Side Browser Mode (GitHub Pages / Offline Web Studio):
+        const buffer = getLocalBuffer();
+        if (!buffer || buffer.length === 0) {
+            showToast("⚠️ এক্সপোর্ট করার মতো কোনো ডাটা পাওয়া যায়নি। আগে কোনো স্যাম্পল ইনজেস্ট করুন!");
+            return;
+        }
+
+        const dateStr = new Date().toISOString().replace(/[:\-]|\.\d{3}/g, "").slice(0, 15);
+        const jsonlContent = buffer.map(rec => JSON.stringify(rec)).join("\n");
+        const rawBytes = new TextEncoder().encode(jsonlContent);
+        const rawSizeKB = (rawBytes.length / 1024).toFixed(1);
+
+        // Native Browser GZIP Compression via CompressionStream API
+        if (typeof CompressionStream !== "undefined") {
+            showToast(`⚡ ${buffer.length} টি রেকর্ড সংকুচিত করা হচ্ছে (GZIP CompressionStream)...`);
+            const stream = new Blob([rawBytes]).stream();
+            const compressedStream = stream.pipeThrough(new CompressionStream("gzip"));
+            const compressedResponse = new Response(compressedStream);
+            const blob = await compressedResponse.blob();
+            const compressedSizeKB = (blob.size / 1024).toFixed(1);
+            const savings = Math.max(1, Math.round((1 - (blob.size / rawBytes.length)) * 100));
+
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `mushfiqur_${currentDomain}_compressed_${dateStr}.jsonl.gz`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast(`✓ সংকুচিত এক্সপোর্ট সফল! ${rawSizeKB} KB → ${compressedSizeKB} KB (${savings}% সাইজ সাশ্রয়) [${buffer.length} records]`);
+        } else {
+            // Fallback for browsers without CompressionStream
+            exportLocalShard();
+        }
+    } catch (err) {
+        console.error("Export compressed error:", err);
+        showToast("এক্সপোর্ট করতে সমস্যা হয়েছে: " + (err.message || err));
+        exportLocalShard(); // Safe fallback
+    } finally {
+        setTimeout(() => {
+            btns.forEach(b => {
+                b.disabled = false;
+                if (b.dataset.origHtml) b.innerHTML = b.dataset.origHtml;
+            });
+        }, 1200);
+    }
+}
+
 // Download 1 GB ZIP Archive
 function downloadZipArchive() {
-    if (isLocalServer) {
-        window.location.href = "/api/download_zip";
-        showToast("📦 জিপ ফাইল ডাউনলোড শুরু হয়েছে! গুগল ড্রাইভে আপলোড করে লিংক শেয়ার করুন।");
-    } else {
-        exportLocalShard();
-    }
+    exportCompressedData();
 }
 
 // Push buffer to GitHub
@@ -1130,6 +1206,15 @@ function setupEventListeners() {
     btnForcePush.addEventListener("click", forcePush);
     btnExportShard.addEventListener("click", exportLocalShard);
     btnClear.addEventListener("click", clearForm);
+
+    const btnExportCompressed = document.getElementById("btnExportCompressed");
+    if (btnExportCompressed) {
+        btnExportCompressed.addEventListener("click", exportCompressedData);
+    }
+    const btnExportCompressedS1 = document.getElementById("btnExportCompressedS1");
+    if (btnExportCompressedS1) {
+        btnExportCompressedS1.addEventListener("click", exportCompressedData);
+    }
 
     if (btnCompressNow) {
         btnCompressNow.addEventListener("click", triggerManualCompress);

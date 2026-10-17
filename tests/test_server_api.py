@@ -66,5 +66,13 @@ class TestServerAPI(unittest.TestCase):
         self.assertIn("max_mb", stats)
         self.assertEqual(stats["max_mb"], 1024.0)
 
+    def test_export_compressed(self):
+        res = requests.get(f"{self.base_url}/api/export_compressed")
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.headers.get("Content-Type"), "application/zip")
+        self.assertIn("attachment; filename=", res.headers.get("Content-Disposition", ""))
+        self.assertGreater(len(res.content), 0)
+
 if __name__ == "__main__":
     unittest.main()
+
