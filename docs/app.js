@@ -1203,8 +1203,8 @@ function setupEventListeners() {
     });
 
     btnSubmit.addEventListener("click", submitRecord);
-    btnForcePush.addEventListener("click", forcePush);
-    btnExportShard.addEventListener("click", exportLocalShard);
+    if (btnForcePush) btnForcePush.addEventListener("click", forcePush);
+    if (btnExportShard) btnExportShard.addEventListener("click", exportLocalShard);
     btnClear.addEventListener("click", clearForm);
 
     const btnExportCompressed = document.getElementById("btnExportCompressed");
