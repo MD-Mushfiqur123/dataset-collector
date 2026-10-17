@@ -46,11 +46,6 @@
                     <span id="pushStatusPill" class="pill-value">LOCAL SHARDS: 0</span>
                 </div>
 
-                <button id="btnOpenGhModal" class="swiss-btn-outline" title="Connect your own GitHub account & repository">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-                    CONNECT GITHUB
-                </button>
-
                 <button id="btnExportCompressed" class="swiss-btn-compact btn-export-compressed" title="যে কোনো পর্যায়ে সংকুচিত ডাটা (.zip বা .jsonl.gz) ডাউনলোড করুন">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                     ⚡ EXPORT COMPRESSED
@@ -296,9 +291,9 @@
 
                         <div class="btn-group">
                             <button id="btnClear" class="swiss-btn-secondary">CLEAR</button>
-                            <button id="btnSubmit" class="swiss-btn-primary" title="ডেটাসেট রেকর্ড জমা দিন এবং সরাসরি রিপোসিটরিতে পুশ করুন">
+                            <button id="btnSubmit" class="swiss-btn-primary" title="ডেটাসেট রেকর্ড জমা দিন এবং লোকাল ভল্টে সংরক্ষণ করুন">
                                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                🚀 SUBMIT &amp; PUSH TO DATASET
+                                💾 SUBMIT TO OFFLINE VAULT
                             </button>
                         </div>
                     </div>
@@ -309,85 +304,13 @@
         <!-- Bottom Shard Telemetry Feed -->
         <footer class="shards-footer">
             <div class="footer-header">
-                <span class="footer-title">SHARD INVENTORY // BUFFER HEALTH</span>
+                <span class="footer-title">SHARD INVENTORY // OFFLINE VAULT HEALTH</span>
                 <span id="diskFreedTotal" class="freed-text">DISTRIBUTED COLLECTIVE // REASONING BANK</span>
             </div>
             <div id="shardsList" class="shards-grid">
-                <div class="shard-item empty">Zero setup required. Your submissions are preserved locally and pushed directly to GitHub.</div>
+                <div class="shard-item empty">Zero setup required. 100% Offline Vault. Your submissions are preserved locally and exportable as compressed .zip / .jsonl.gz.</div>
             </div>
         </footer>
-    </div>
-
-    <!-- GitHub Connection Modal (Swiss Minimal Monochrome) -->
-    <div id="ghModal" class="modal-overlay hidden">
-        <div class="modal-card">
-            <div class="modal-header">
-                <div class="modal-title-cluster">
-                    <span class="badge-tag">AUTHENTICATION & REPO ROUTING</span>
-                    <h3 class="modal-title">CONNECT GITHUB REPOSITORY</h3>
-                </div>
-                <button id="btnCloseGhModal" class="modal-close-btn">&times;</button>
-            </div>
-            
-            <div class="modal-body">
-                <p class="modal-desc">
-                    যেকোনো ইউজার বা কন্ট্রিবিউটর তাদের নিজস্ব GitHub অ্যাকাউন্ট যুক্ত করতে পারবেন। 
-                    প্রতিটি ডিস্টিল্ড শার্ড সরাসরি আপনার <code>https://github.com/&lt;username&gt;/&lt;repo&gt;</code> তে পুশ হবে।
-                </p>
-
-                <!-- 1-Click Auto-Detect Button -->
-                <div class="autodetect-banner" id="autodetectBanner">
-                    <div class="autodetect-info">
-                        <strong>⚡ 1-CLICK INSTANT AUTH</strong>
-                        <span>লোকাল মেশিনে থাকলে CLI থেকে ১ ক্লিকে অটো-ডিটেক্ট করুন:</span>
-                    </div>
-                    <button id="btnAutoDetectGh" class="swiss-btn-autodetect" type="button">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-                        AUTO-DETECT FROM CLI
-                    </button>
-                </div>
-
-                <div class="modal-divider"><span>OR REPO CONFIGURATION</span></div>
-
-                <div class="form-group">
-                    <label class="form-label" for="ghUsernameInput">GITHUB USERNAME (বা অর্গানাইজেশন):</label>
-                    <input type="text" id="ghUsernameInput" class="swiss-input" placeholder="e.g. MD-Mushfiqur123 or contributor-user" value="MD-Mushfiqur123" autocomplete="off" spellcheck="false">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label" for="ghRepoInput">DATASET REPOSITORY NAME (রিপোজিটরি নাম):</label>
-                    <input type="text" id="ghRepoInput" class="swiss-input" placeholder="Dataset" value="Dataset" autocomplete="off" spellcheck="false">
-                    <span class="input-hint">Default is <code>Dataset</code>. If the repo doesn't exist on GitHub, create an empty repo first.</span>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label" for="ghTokenInput">PERSONAL ACCESS TOKEN (PAT) [PUSH করার জন্য]:</label>
-                    <input type="password" id="ghTokenInput" class="swiss-input mono" placeholder="ghp_xxxxxxxxxxxx (Classic token with 'repo' scope)" autocomplete="off">
-                    <span class="input-hint">
-                        GitHub ➔ Settings ➔ Developer Settings ➔ Personal Access Tokens (classic) থেকে <code>repo</code> পারমিশন সহ একটি টোকেন তৈরি করে এখানে দিন। এটি শুধুমাত্র আপনার ব্রাউজারের লোকালে সেভ থাকবে।
-                    </span>
-                </div>
-
-                <div class="modal-info-box">
-                    <div class="info-row">
-                        <span class="info-label">TARGET PUSH URL:</span>
-                        <span id="modalTargetUrl" class="info-val">https://github.com/MD-Mushfiqur123/Dataset</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">STORAGE FORMAT:</span>
-                        <span class="info-val">Gzip compressed JSONL shards with deduplication signatures</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <button id="btnCancelGhModal" class="swiss-btn-secondary">CANCEL</button>
-                <button id="btnSaveGhConfig" class="swiss-btn-primary">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                    SAVE & CONNECT
-                </button>
-            </div>
-        </div>
     </div>
 
     <!-- Notification Toast -->

@@ -749,7 +749,7 @@ async function submitRecord() {
     }
 
     btnSubmit.disabled = true;
-    btnSubmit.innerHTML = `<span class="radar-dot"></span> PUSHING...`;
+    btnSubmit.innerHTML = `<span class="radar-dot"></span> SAVING...`;
 
     // 1. Try local server if running locally
     if (isLocalServer) {
@@ -761,36 +761,28 @@ async function submitRecord() {
             });
             if (res.ok) {
                 const result = await res.json();
-                showToast(result.message || "Record successfully validated and pushed!");
+                showToast(result.message || "✓ রেকর্ড সফলভাবে লোকাল ভল্টে সংরক্ষিত হয়েছে!");
                 saveSignature(payload.id, `${payload.prompt} ${payload.response}`, payload.domain);
                 clearForm();
                 await fetchServerStats();
                 btnSubmit.disabled = false;
-                btnSubmit.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> 🚀 SUBMIT &amp; PUSH TO DATASET`;
+                btnSubmit.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> 💾 SUBMIT TO OFFLINE VAULT`;
                 return;
             }
         } catch (e) {
-            console.log("Local server unavailable, executing web push.");
+            console.log("Local server unavailable, executing offline web save.");
         }
     }
 
-    // 2. Client-side storage & instant push to GitHub
+    // 2. Client-side pure offline vault storage
     saveToLocalBuffer(payload);
     saveSignature(payload.id, `${payload.prompt} ${payload.response}`, payload.domain);
     updateLocalStats();
-
-    const cfg = getGhConfig();
-    if (cfg.token) {
-        showToast("🚀 Pushing record directly to GitHub via Token...");
-        await pushRecordToGitHub(payload);
-    } else {
-        showToast("🚀 Opening 1-Click Ingestion on GitHub...");
-        submitViaGitHubIssue([payload]);
-    }
+    showToast("✓ রেকর্ড সফলভাবে অফলাইন ভল্টে সংরক্ষিত হয়েছে!");
 
     clearForm();
     btnSubmit.disabled = false;
-    btnSubmit.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> 🚀 SUBMIT &amp; PUSH TO DATASET`;
+    btnSubmit.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> 💾 SUBMIT TO OFFLINE VAULT`;
 }
 
 // Push a single record directly to GitHub repository via REST API
@@ -1231,20 +1223,22 @@ function setupEventListeners() {
         btnLoadSample.addEventListener("click", loadDomainSample);
     }
 
-    btnOpenGhModal.addEventListener("click", openGhModal);
-    btnCloseGhModal.addEventListener("click", closeGhModal);
-    btnCancelGhModal.addEventListener("click", closeGhModal);
-    btnSaveGhConfig.addEventListener("click", saveGhConfig);
-    btnAutoDetectGh.addEventListener("click", autoDetectGh);
+    if (btnOpenGhModal) btnOpenGhModal.addEventListener("click", openGhModal);
+    if (btnCloseGhModal) btnCloseGhModal.addEventListener("click", closeGhModal);
+    if (btnCancelGhModal) btnCancelGhModal.addEventListener("click", closeGhModal);
+    if (btnSaveGhConfig) btnSaveGhConfig.addEventListener("click", saveGhConfig);
+    if (btnAutoDetectGh) btnAutoDetectGh.addEventListener("click", autoDetectGh);
 
-    [ghUsernameInput, ghRepoInput].forEach(inp => {
+    [ghUsernameInput, ghRepoInput].filter(Boolean).forEach(inp => {
         inp.addEventListener("input", updateModalUrlPreview);
     });
 
-    ghModal.addEventListener("click", (e) => {
-        if (e.target === ghModal) closeGhModal();
-    });
-    document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && !ghModal.classList.contains("hidden")) closeGhModal();
-    });
+    if (ghModal) {
+        ghModal.addEventListener("click", (e) => {
+            if (e.target === ghModal) closeGhModal();
+        });
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && !ghModal.classList.contains("hidden")) closeGhModal();
+        });
+    }
 }
